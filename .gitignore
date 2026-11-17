@@ -1,0 +1,36 @@
+# Uploads utilisateurs
+public/uploads/vehicles/
+public/uploads/branding/
+public/uploads/selling/
+public/uploads/testimonials/
+!public/uploads/vehicles/.gitkeep
+!public/uploads/branding/.gitkeep
+!public/uploads/selling/.gitkeep
+!public/uploads/testimonials/.gitkeep
+
+# Configuration locale (contient le mot de passe BDD)
+config/database.php
+
+# Images statiques lourdes (à gérer manuellement)
+public/images/hero.jpg
+public/images/propos.png
+public/images/no-vehicle.svg
+public/images/favicon.svg
+
+# Logs
+*.log
+*.tmp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# PHP cache
+*.cache

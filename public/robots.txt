@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /public/uploads/
+Disallow: /favoris/api
+Sitemap: http://localhost/bon-occaz/public/sitemap.php
