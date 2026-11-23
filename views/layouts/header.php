@@ -8,7 +8,12 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
     <meta name="author" content="La Bonne Occaz">
     <meta name="theme-color" content="#e63946">
-    <link rel="canonical" href="<?= htmlspecialchars(BASE_URL . strtok($_SERVER['REQUEST_URI'] ?? '/', '?')) ?>">
+    <?php
+    // Canonical : reconstruit l'URL propre depuis le routeur (pas REQUEST_URI qui contient ?url=...)
+    $_canonicalPath = isset($_GET['url']) ? '/' . trim($_GET['url'], '/') : '/';
+    if ($_canonicalPath !== '/') $_canonicalPath = rtrim($_canonicalPath, '/');
+    ?>
+    <link rel="canonical" href="<?= htmlspecialchars(BASE_URL . $_canonicalPath) ?>">
 
     <!-- Open Graph -->
     <meta property="og:title"        content="<?= htmlspecialchars($title ?? 'La Bonne Occaz') ?>">
@@ -17,7 +22,7 @@
     <meta property="og:image"        content="<?= BASE_URL ?>/public/images/og-image.jpg">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url"          content="<?= htmlspecialchars(BASE_URL . ($_SERVER['REQUEST_URI'] ?? '')) ?>">
+    <meta property="og:url"          content="<?= htmlspecialchars(BASE_URL . $_canonicalPath) ?>">
     <meta property="og:locale"       content="fr_FR">
     <meta property="og:site_name"    content="La Bonne Occaz">
 
