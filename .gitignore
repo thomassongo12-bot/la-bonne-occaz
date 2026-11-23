@@ -11,11 +11,8 @@ public/uploads/testimonials/
 # Configuration locale (contient le mot de passe BDD)
 config/database.php
 
-# Images statiques lourdes (à gérer manuellement)
-public/images/hero.jpg
-public/images/propos.png
-public/images/no-vehicle.svg
-public/images/favicon.svg
+# Images statiques du site (versionnées et déployées automatiquement)
+# Rien à exclure ici — hero.jpg, propos.png, etc. font partie du dépôt
 
 # Logs
 *.log
