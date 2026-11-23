@@ -16,9 +16,13 @@
    - Utilisateur : créez un utilisateur dédié
    - Notez : **hôte**, **nom BDD**, **utilisateur**, **mot de passe**
 3. Dans **phpMyAdmin** (hPanel → Bases de données → phpMyAdmin) :
-   - Sélectionnez votre BDD
-   - Onglet **Importer** → choisissez `database/schema.sql` → Exécuter
-   - Onglet **Importer** → choisissez `database/seeds.sql` → Exécuter
+   - Sélectionnez votre BDD dans la liste à gauche
+   - Onglet **Importer** → choisissez `database/schema_hostinger.sql` → Exécuter
+   - Onglet **Importer** → choisissez `database/seeds_hostinger.sql` → Exécuter
+
+   > ⚠️ **Important** : utilisez `schema_hostinger.sql` et `seeds_hostinger.sql`
+   > (et non `schema.sql` / `seeds.sql` qui contiennent `CREATE DATABASE` et `USE`
+   > — ces commandes échouent sur Hostinger car vous n'avez pas ces droits)
 
 ---
 
