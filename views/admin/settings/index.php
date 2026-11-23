@@ -148,12 +148,13 @@ foreach ($groups['branding'] ?? [] as $s) {
     ================================================================ -->
     <?php
     $groupConfig = [
-        'general'  => ['fa-cog',        '#6366f1', 'Général'],
-        'contact'  => ['fa-phone-alt',   '#10b981', 'Coordonnées'],
-        'homepage' => ['fa-home',        '#f59e0b', 'Page d\'accueil'],
-        'social'   => ['fa-share-alt',   '#ec4899', 'Réseaux sociaux'],
-        'about'    => ['fa-info-circle', '#3b82f6', 'À propos'],
-        'seo'      => ['fa-search',      '#8b5cf6', 'SEO'],
+        'general'     => ['fa-cog',          '#6366f1', 'Général'],
+        'contact'     => ['fa-phone-alt',    '#10b981', 'Coordonnées'],
+        'homepage'    => ['fa-home',         '#f59e0b', 'Page d\'accueil'],
+        'reservation' => ['fa-calendar-check','#e63946', 'Réservation'],
+        'social'      => ['fa-share-alt',    '#ec4899', 'Réseaux sociaux'],
+        'about'       => ['fa-info-circle',  '#3b82f6', 'À propos'],
+        'seo'         => ['fa-search',       '#8b5cf6', 'SEO'],
     ];
     $socialIcons = [
         'facebook_url'    => ['fab fa-facebook-f',  '#1877f2'],

@@ -139,6 +139,16 @@ switch ($seg0) {
         $param  = $seg1;
         break;
 
+    case 'reserver':
+        $controllerClass = 'ReservationController';
+        $action = 'index';
+        $param  = $seg1;
+        if ($seg1 === 'submit' && $seg2) {
+            $action = 'submit';
+            $param  = $seg2;
+        }
+        break;
+
     case 'contact':
         $controllerClass = 'ContactController';
         $action = ($seg1 !== '') ? $seg1 : 'index';
@@ -172,6 +182,11 @@ switch ($seg0) {
             case 'dashboard':
                 $controllerClass = 'AdminDashboardController';
                 $action = 'index';
+                break;
+            case 'reservations':
+                $controllerClass = 'AdminReservationController';
+                $action = $seg2 !== '' ? $seg2 : 'index';
+                $param  = $seg3 !== '' ? $seg3 : null;
                 break;
             case 'vehicules':
                 $controllerClass = 'AdminVehicleController';

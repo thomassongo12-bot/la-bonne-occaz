@@ -758,3 +758,98 @@ a:hover { color: var(--primary-dark); }
 
 /* WhatsApp toujours vert au hover */
 .contact-social .social-link--whatsapp:hover { background: #25d366 !important; color: #fff !important; }
+
+/* ================================================================
+   RÉSERVATION — fiche véhicule + page réservation
+================================================================ */
+
+/* Bouton réserver (rouge primaire) */
+.btn-reserve {
+    background: var(--primary); color: #fff !important; border: none;
+    border-radius: var(--radius-sm); font-weight: 700;
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    transition: var(--transition); padding: .8rem;
+}
+.btn-reserve:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+/* Bouton email */
+.btn-email {
+    background: #3b82f6; color: #fff !important; border: none;
+    border-radius: var(--radius-sm); font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    transition: var(--transition); padding: .7rem;
+}
+.btn-email:hover { background: #2563eb; }
+
+/* Aperçu véhicule sur page réservation */
+.reservation-vehicle-card {
+    display: flex; gap: 1rem; align-items: center;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+.reservation-vehicle-card__img {
+    width: 120px; min-width: 120px; height: 85px;
+    border-radius: 8px; overflow: hidden; background: var(--bg-light);
+}
+.reservation-vehicle-card__img img { width:100%; height:100%; object-fit:cover; }
+.reservation-vehicle-card__brand { font-size:.7rem; font-weight:700; text-transform:uppercase; color:var(--primary); letter-spacing:.08em; }
+.reservation-vehicle-card__title { font-size:1rem; font-weight:700; color:var(--dark); margin:.2rem 0 .4rem; }
+.reservation-vehicle-card__specs { display:flex; gap:.5rem; flex-wrap:wrap; font-size:.75rem; color:var(--text-muted); }
+.reservation-vehicle-card__specs span { background:var(--bg-light); padding:.15rem .4rem; border-radius:4px; }
+.reservation-vehicle-card__price { font-size:1.3rem; font-weight:800; color:var(--dark); margin-top:.4rem; }
+
+/* Bloc conditions */
+.reservation-conditions-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.reservation-conditions-card__header {
+    background: var(--dark); color: #fff;
+    padding: .9rem 1.2rem; font-weight: 700; font-size: .9rem;
+}
+.reservation-conditions-card__body { padding: 1.2rem; }
+.reservation-conditions-text {
+    font-size: .88rem; color: var(--text); line-height: 1.8;
+    white-space: pre-wrap;
+}
+.reservation-deposit-badge {
+    background: rgba(230,57,70,.08); border: 1px solid rgba(230,57,70,.2);
+    border-radius: 8px; padding: .6rem 1rem;
+    font-size: .85rem; color: var(--primary-dark);
+}
+.reservation-hold-badge {
+    background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.2);
+    border-radius: 8px; padding: .6rem 1rem;
+    font-size: .85rem; color: #1d4ed8;
+}
+
+/* Formulaire réservation */
+.reservation-form-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-md); position: sticky; top: calc(var(--header-height) + 20px);
+}
+.reservation-form-card__header {
+    background: var(--primary); color: #fff;
+    padding: 1rem 1.4rem; font-weight: 700; font-size: .95rem;
+}
+.reservation-form-card__body { padding: 1.4rem; }
+
+/* Bloc acceptation conditions */
+.reservation-accept-block {
+    background: #fffbeb; border: 1.5px solid #fcd34d;
+    border-radius: 8px; padding: .9rem 1rem;
+}
+.reservation-accept-label {
+    display: flex; align-items: flex-start; gap: .6rem; cursor: pointer; margin: 0;
+}
+.reservation-accept-label input[type="checkbox"] {
+    margin-top: .2rem; flex-shrink: 0; accent-color: var(--primary); width: 16px; height: 16px;
+}
+.reservation-accept-text { font-size: .83rem; color: #92400e; line-height: 1.5; }
+.reservation-accept-warning {
+    background: #fee2e2; color: #991b1b; border-radius: 6px;
+    padding: .5rem .8rem; font-size: .78rem; margin-top: .5rem;
+    font-weight: 600;
+}

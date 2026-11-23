@@ -65,6 +65,16 @@
 
             <li class="nav-label">Demandes</li>
             <li>
+                <a href="<?= BASE_URL ?>/admin/reservations"
+                   class="<?= (strpos($_SERVER['REQUEST_URI'] ?? '', '/admin/reservations') !== false) ? 'active' : '' ?>">
+                    <i class="fas fa-calendar-check"></i><span>Réservations</span>
+                    <?php
+                    try { $rn = new Reservation(); $nr = $rn->countNew(); if ($nr > 0) echo "<span class='sidebar-badge'>$nr</span>"; }
+                    catch(Exception $e) {}
+                    ?>
+                </a>
+            </li>
+            <li>
                 <a href="<?= BASE_URL ?>/admin/demandes"
                    class="<?= (strpos($_SERVER['REQUEST_URI'] ?? '', '/admin/demandes') !== false) ? 'active' : '' ?>">
                     <i class="fas fa-inbox"></i><span>Toutes les demandes</span>

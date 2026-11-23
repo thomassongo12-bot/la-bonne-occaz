@@ -251,8 +251,13 @@ $schema = array_filter($schema, fn($v) => $v !== null && $v !== '');
         <div class="price-main"><?= number_format((float)$priceDisplay,0,',',' ') ?> <span class="price-currency">€</span></div>
         <div class="price-ttc">Prix TTC · Financement disponible</div>
         <div class="quick-actions mt-3 d-grid gap-2">
-            <a href="tel:<?= str_replace([' ','.','(',')','-'],'', cfg_phone()) ?>" class="btn btn-call">
-                <i class="fas fa-phone-alt me-2"></i>Appeler maintenant
+            <a href="<?= BASE_URL ?>/reserver/<?= htmlspecialchars($vehicle['slug']) ?>"
+               class="btn btn-reserve btn-lg">
+                <i class="fas fa-calendar-check me-2"></i>Réserver ce véhicule
+            </a>
+            <a href="mailto:<?= htmlspecialchars(cfg_email()) ?>?subject=<?= urlencode('Renseignement - '.($vehicle['brand_name']??'').' '.$vehicle['model']) ?>"
+               class="btn btn-email">
+                <i class="fas fa-envelope me-2"></i>Envoyer un email
             </a>
             <a href="https://wa.me/<?= htmlspecialchars(cfg_wa()) ?>?text=<?= urlencode('Bonjour, intéressé par '.($vehicle['brand_name']??'').' '.$vehicle['model']) ?>"
                target="_blank" class="btn btn-whatsapp">
