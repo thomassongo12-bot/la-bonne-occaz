@@ -29,7 +29,11 @@ define('CONTACT_PHONE',   '04 50 XX XX XX');
 define('CONTACT_ADDRESS', '12 Rue de l\'Industrie, 74100 Annemasse');
 define('CONTACT_HOURS',   'Lun-Sam : 9h00 - 18h30');
 define('WHATSAPP_NUMBER', '33450XXXXXX');
-define('DEBUG_MODE', true);
+
+// DEBUG_MODE : false automatiquement en production (pas localhost)
+$_isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', 'localhost:8080', '127.0.0.1']);
+define('DEBUG_MODE', $_isLocal);
+unset($_isLocal);
 
 date_default_timezone_set('Europe/Paris');
 
