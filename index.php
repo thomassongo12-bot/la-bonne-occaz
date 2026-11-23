@@ -3,6 +3,14 @@
  * La Bonne Occaz - Routeur principal
  */
 
+// Sessions : forcer un chemin valide sur tous les hébergements
+if (session_status() === PHP_SESSION_NONE) {
+    $sessionPath = sys_get_temp_dir();
+    if (is_writable($sessionPath)) {
+        session_save_path($sessionPath);
+    }
+}
+
 define('ROOT_PATH', __DIR__);
 $_host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $_scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
