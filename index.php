@@ -4,11 +4,12 @@
  */
 
 define('ROOT_PATH', __DIR__);
-// Détection automatique du port
-$_port = ($_SERVER['SERVER_PORT'] ?? 80);
-$_host = $_SERVER['HTTP_HOST'] ?? 'localhost:8080';
+$_host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $_scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-define('BASE_URL', $_scheme . '://' . $_host . '/bon-occaz');
+// En local XAMPP le projet est dans /bon-occaz, en production il est à la racine
+$_isLocal = in_array($_host, ['localhost', 'localhost:8080', '127.0.0.1', '127.0.0.1:8080']);
+$_subdir  = $_isLocal ? '/bon-occaz' : '';
+define('BASE_URL', $_scheme . '://' . $_host . $_subdir);
 define('SITE_NAME', 'La Bonne Occaz');
 define('SITE_DESCRIPTION', 'Votre spécialiste en véhicules d\'occasion de qualité');
 define('VIEWS_PATH', ROOT_PATH . '/views');
@@ -31,9 +32,8 @@ define('CONTACT_HOURS',   'Lun-Sam : 9h00 - 18h30');
 define('WHATSAPP_NUMBER', '33450XXXXXX');
 
 // DEBUG_MODE : false automatiquement en production (pas localhost)
-$_isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', 'localhost:8080', '127.0.0.1']);
 define('DEBUG_MODE', $_isLocal);
-unset($_isLocal);
+unset($_isLocal, $_subdir);
 
 date_default_timezone_set('Europe/Paris');
 
