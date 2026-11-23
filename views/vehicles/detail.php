@@ -252,16 +252,17 @@ $schema = array_filter($schema, fn($v) => $v !== null && $v !== '');
         <div class="price-ttc">Prix TTC · Financement disponible</div>
         <div class="quick-actions mt-3 d-grid gap-2">
             <a href="<?= BASE_URL ?>/reserver/<?= htmlspecialchars($vehicle['slug']) ?>"
-               class="btn btn-reserve btn-lg">
-                <i class="fas fa-calendar-check me-2"></i>Réserver ce véhicule
+               style="display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1rem;background:#e63946;color:#fff;border-radius:50px;font-weight:700;font-size:.95rem;text-decoration:none;border:none;box-shadow:0 4px 16px rgba(230,57,70,.4);">
+                <i class="fas fa-calendar-check"></i>Réserver ce véhicule
             </a>
             <a href="mailto:<?= htmlspecialchars(cfg_email()) ?>?subject=<?= urlencode('Renseignement - '.($vehicle['brand_name']??'').' '.$vehicle['model']) ?>"
-               class="btn btn-email">
-                <i class="fas fa-envelope me-2"></i>Envoyer un email
+               style="display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1rem;background:#ffffff;color:#1d1d1b;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;border:none;">
+                <i class="fas fa-envelope"></i>Envoyer un email
             </a>
             <a href="https://wa.me/<?= htmlspecialchars(cfg_wa()) ?>?text=<?= urlencode('Bonjour, intéressé par '.($vehicle['brand_name']??'').' '.$vehicle['model']) ?>"
-               target="_blank" class="btn btn-whatsapp">
-                <i class="fab fa-whatsapp me-2"></i>WhatsApp
+               target="_blank"
+               style="display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1rem;background:#25d366;color:#fff;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;border:none;">
+                <i class="fab fa-whatsapp"></i>WhatsApp
             </a>
             <button class="btn btn-favorite-detail btn-favorite" data-id="<?= $vehicle['id'] ?>">
                 <i class="fas fa-heart me-2"></i>Ajouter aux favoris

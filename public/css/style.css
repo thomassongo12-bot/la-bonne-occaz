@@ -765,21 +765,41 @@ a:hover { color: var(--primary-dark); }
 
 /* Bouton réserver (rouge primaire) */
 .btn-reserve {
-    background: var(--primary); color: #fff !important; border: none;
-    border-radius: var(--radius-sm); font-weight: 700;
+    background: var(--primary) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: .95rem;
     display: flex; align-items: center; justify-content: center; gap: .5rem;
-    transition: var(--transition); padding: .8rem;
+    transition: var(--transition); padding: .85rem 1rem;
+    box-shadow: 0 4px 16px rgba(230,57,70,.45);
+    text-decoration: none;
 }
-.btn-reserve:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-reserve:hover {
+    background: var(--primary-dark) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(230,57,70,.55);
+}
 
 /* Bouton email */
 .btn-email {
-    background: #3b82f6; color: #fff !important; border: none;
-    border-radius: var(--radius-sm); font-weight: 600;
+    background: #fff !important;
+    color: #1d1d1b !important;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: .95rem;
     display: flex; align-items: center; justify-content: center; gap: .5rem;
-    transition: var(--transition); padding: .7rem;
+    transition: var(--transition); padding: .85rem 1rem;
+    text-decoration: none;
 }
-.btn-email:hover { background: #2563eb; }
+.btn-email:hover {
+    background: #f1f5f9 !important;
+    color: #1d1d1b !important;
+    transform: translateY(-2px);
+}
 
 /* Aperçu véhicule sur page réservation */
 .reservation-vehicle-card {
