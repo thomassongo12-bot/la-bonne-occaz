@@ -49,6 +49,20 @@ class AdminSettingsController extends AdminBaseController {
                         $this->redirect('/admin/parametres');
                         return;
                     }
+                } elseif (!empty($_FILES[$fileKey]['error']) && $_FILES[$fileKey]['error'] !== UPLOAD_ERR_NO_FILE) {
+                    // Erreur PHP upload (quota, taille serveur, etc.)
+                    $phpErrors = [
+                        UPLOAD_ERR_INI_SIZE   => 'Fichier trop lourd (limite serveur PHP).',
+                        UPLOAD_ERR_FORM_SIZE  => 'Fichier trop lourd (limite formulaire).',
+                        UPLOAD_ERR_PARTIAL    => 'Upload interrompu, réessayez.',
+                        UPLOAD_ERR_NO_TMP_DIR => 'Dossier temporaire PHP introuvable.',
+                        UPLOAD_ERR_CANT_WRITE => 'Impossible d\'écrire le fichier (permissions serveur).',
+                        UPLOAD_ERR_EXTENSION  => 'Extension PHP bloquée.',
+                    ];
+                    $msg = $phpErrors[$_FILES[$fileKey]['error']] ?? 'Erreur inconnue (code ' . $_FILES[$fileKey]['error'] . ').';
+                    $this->flashMessage('error', 'Upload ' . $key . ' : ' . $msg);
+                    $this->redirect('/admin/parametres');
+                    return;
                 } elseif (isset($_POST['remove_' . $key]) && $_POST['remove_' . $key] === '1') {
                     // Suppression demandée
                     $old = $model->get($key);
@@ -127,7 +141,17 @@ class AdminSettingsController extends AdminBaseController {
         if (!in_array($mime, $allowedMimes)) return false;
 
         $dir = UPLOADS_PATH . '/branding/';
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        // Créer le dossier si absent, avec permissions larges
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0755, true)) return false;
+        }
+
+        // Vérifier que le dossier est accessible en écriture
+        if (!is_writable($dir)) {
+            @chmod($dir, 0755);
+            if (!is_writable($dir)) return false;
+        }
 
         // Nom fixe selon la clé pour faciliter la mise à jour
         $filename = $key . '.' . $ext;
