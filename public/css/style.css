@@ -605,6 +605,16 @@ a:hover { color: var(--primary-dark); }
 /* ================================================================
    RESPONSIVE
 ================================================================ */
+
+/* ── Empêche tout débordement horizontal sur mobile ── */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+*, *::before, *::after {
+  min-width: 0; /* empêche les flex/grid children de dépasser */
+}
+
 @media (max-width: 768px) {
   .hero-section { background-attachment: scroll; }
   .quick-search-section { margin-top: 0; }
@@ -618,6 +628,61 @@ a:hover { color: var(--primary-dark); }
   .trust-grid { grid-template-columns: 1fr; }
   .vehicle-specs-grid { grid-template-columns: repeat(2, 1fr); }
   .form-section { padding: 1rem; }
+
+  /* Why section — badge ne dépasse plus */
+  .why-image-badge { right: 10px; bottom: 10px; position: absolute; }
+  .why-image-wrapper { overflow: hidden; }
+
+  /* Hero — contenu pleine largeur */
+  .hero-content { max-width: 100%; padding: 40px 0 30px; }
+  .hero-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+  .hero-subtitle { font-size: .95rem; }
+  .btn-hero-primary,
+  .btn-hero-secondary { width: 100%; justify-content: center; }
+  .hero-actions { flex-direction: column; }
+
+  /* Quick search */
+  .quick-search-card { padding: 1.2rem; }
+
+  /* CTA card */
+  .cta-card { padding: 1.8rem 1.2rem; }
+  .cta-card::before { display: none; }
+  .cta-actions { flex-direction: column; align-items: stretch; }
+  .cta-actions .btn-cta-primary,
+  .cta-actions .btn-cta-secondary,
+  .cta-actions .btn-cta-phone { text-align: center; }
+
+  /* Reservation vehicle card */
+  .reservation-vehicle-card { flex-direction: column; align-items: flex-start; }
+  .reservation-vehicle-card__img { width: 100%; min-width: unset; height: 160px; }
+
+  /* Réservation form sticky → static */
+  .reservation-form-card { position: static; }
+
+  /* Gallery modal nav */
+  .gallery-modal__nav--prev { left: 4px; }
+  .gallery-modal__nav--next { right: 4px; }
+
+  /* Tableau specs */
+  .spec-table { font-size: .8rem; }
+
+  /* Equipment grid */
+  .equipment-grid { grid-template-columns: 1fr; }
+
+  /* Footer */
+  .footer-top { padding: 40px 0 24px; }
+  .btn-whatsapp { width: 100%; justify-content: center; }
+
+  /* Selling form */
+  .selling-form-header { padding: 1.2rem; }
+  .form-section { padding: 1rem; }
+
+  /* Back to top */
+  .back-to-top { bottom: 16px; right: 16px; }
+
+  /* Section padding */
+  .section-padding    { padding: 50px 0; }
+  .section-padding-sm { padding: 32px 0; }
 }
 
 /* ================================================================
@@ -733,9 +798,8 @@ a:hover { color: var(--primary-dark); }
     .site-header .navbar-collapse {
         background: rgba(29,29,27,.98);
         border-top: 1px solid rgba(255,255,255,.08);
-        padding: 1rem 0;
-        margin: 0 -12px;
         padding: 1rem 1rem;
+        margin: 0 -12px;
     }
     .site-header .navbar-nav .nav-link { padding: .6rem .5rem !important; }
     .site-header .navbar-actions,
@@ -748,6 +812,24 @@ a:hover { color: var(--primary-dark); }
     .hero-section { background-attachment: scroll; }
     .hero-stats { gap: 1.5rem; }
     .how-step { margin-top: 1.2rem; }
+
+    /* Why section — image ne déborde pas */
+    .why-image-wrapper { overflow: hidden; border-radius: var(--radius-lg); }
+    .why-image-badge { right: 10px; bottom: 10px; }
+
+    /* Quick search — pas de margin négatif qui crée du scroll */
+    .quick-search-section { margin-top: 0; }
+
+    /* Sections padding réduites */
+    .section-padding    { padding: 60px 0; }
+    .section-padding-sm { padding: 40px 0; }
+
+    /* CTA card */
+    .cta-card { padding: 2rem 1.5rem; }
+
+    /* Galerie */
+    .gallery-modal__nav--prev { left: 4px; }
+    .gallery-modal__nav--next { right: 4px; }
 }
 
 /* ================================================================
