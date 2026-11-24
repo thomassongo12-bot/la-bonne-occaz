@@ -50,7 +50,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="<?= BASE_URL ?>/public/css/style.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/style.css?v=<?= filemtime(ROOT_PATH.'/public/css/style.css') ?>" rel="stylesheet">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"AutoDealer","name":"La Bonne Occaz","url":"<?= BASE_URL ?>","telephone":"<?= htmlspecialchars(cfg_phone()) ?>"}</script>
 </head>
 <body>

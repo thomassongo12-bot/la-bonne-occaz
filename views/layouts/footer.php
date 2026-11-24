@@ -129,9 +129,9 @@
     const BASE_URL = '<?= BASE_URL ?>';
     const UPLOADS_URL = '<?= UPLOADS_URL ?>';
 </script>
-<script src="<?= BASE_URL ?>/public/js/main.js"></script>
+<script src="<?= BASE_URL ?>/public/js/main.js?v=<?= filemtime(ROOT_PATH.'/public/js/main.js') ?>"></script>
 <!-- Galerie véhicule — chargée après main.js pour éviter les conflits d'opacity -->
-<script src="<?= BASE_URL ?>/public/js/vehicle-detail.js"></script>
+<script src="<?= BASE_URL ?>/public/js/vehicle-detail.js?v=<?= filemtime(ROOT_PATH.'/public/js/vehicle-detail.js') ?>"></script>
 
 <!-- Bouton retour en haut -->
 <button class="back-to-top" id="backToTop" aria-label="Retour en haut">

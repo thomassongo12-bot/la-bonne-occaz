@@ -736,7 +736,6 @@ html, body {
 }
 
 @media (max-width: 768px) {
-  .hero-section { background-attachment: scroll; }
   .quick-search-section { margin-top: 0; }
   .quick-search-card { border-radius: 0; }
   .hero-stats { gap: 1.5rem; }
@@ -929,7 +928,6 @@ html, body {
         border-top: 1px solid rgba(255,255,255,.08);
         justify-content: flex-start !important;
     }
-    .hero-section { background-attachment: scroll; }
     .hero-stats { gap: 1.5rem; }
     .how-step { margin-top: 1.2rem; }
 
