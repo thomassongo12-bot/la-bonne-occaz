@@ -34,7 +34,7 @@
                                         <i class="fas fa-camera me-1"></i>
                                         <span class="small">
                                             Glissez ou
-                                            <label for="photo" class="text-primary" style="cursor:pointer">parcourir</label>
+                                            <span class="text-primary" style="cursor:pointer;text-decoration:underline">parcourir</span>
                                         </span>
                                         <div class="text-muted" style="font-size:.72rem;">JPG, PNG, WebP — max 2 Mo</div>
                                         <input type="file" id="photo" name="photo"
@@ -107,32 +107,76 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const input   = document.getElementById('photo');
-    const area    = document.getElementById('photoUploadArea');
-    const preview = document.getElementById('photoCurrentImg') || document.getElementById('photoPlaceholder');
+    const input = document.getElementById('photo');
+    const area  = document.getElementById('photoUploadArea');
 
-    area.addEventListener('click', () => input.click());
-    area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
-    area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
-    area.addEventListener('drop', e => {
-        e.preventDefault(); area.classList.remove('drag-over');
-        if (e.dataTransfer.files.length) {
-            const dt = new DataTransfer();
-            dt.items.add(e.dataTransfer.files[0]);
-            input.files = dt.files;
-            showPreview(input.files[0]);
-        }
+    // ── Ouvrir le sélecteur uniquement via l'input, pas via le label
+    // (évite le double déclenchement label + area)
+    area.addEventListener('click', e => {
+        // Si le clic vient du label interne, ne rien faire de plus
+        if (e.target.tagName === 'LABEL' || e.target.closest('label')) return;
+        input.click();
     });
-    input.addEventListener('change', () => { if (input.files.length) showPreview(input.files[0]); });
+
+    // Drag & drop
+    area.addEventListener('dragover',  e => { e.preventDefault(); area.classList.add('drag-over'); });
+    area.addEventListener('dragleave', ()  => area.classList.remove('drag-over'));
+    area.addEventListener('drop', e => {
+        e.preventDefault();
+        area.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length) showPreview(files[0]);
+    });
+
+    // Sélection fichier — utiliser onchange pour fiabilité max
+    input.onchange = () => {
+        if (input.files && input.files[0]) showPreview(input.files[0]);
+    };
 
     function showPreview(file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const box = document.getElementById('photoPreviewBox');
-            box.innerHTML = `<img src="${e.target.result}" alt="Aperçu"
-                style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #e63946;">`;
+        // Validation immédiate
+        if (!file.type.startsWith('image/')) return;
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Image trop volumineuse (max 2 Mo). Choisissez une image plus petite.');
+            input.value = '';
+            return;
+        }
+
+        const box = document.getElementById('photoPreviewBox');
+
+        // Afficher un spinner pendant le chargement
+        box.innerHTML = `<div style="width:72px;height:72px;border-radius:50%;background:#f1f5f9;
+            display:flex;align-items:center;justify-content:center;">
+            <i class="fas fa-spinner fa-spin text-muted"></i></div>`;
+
+        // Redimensionner via Canvas avant d'afficher (rapide, évite les lenteurs sur grosses photos)
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+
+            // Canvas 150×150 max
+            const size  = 150;
+            const ratio = Math.min(size / img.width, size / img.height);
+            const w = Math.round(img.width  * ratio);
+            const h = Math.round(img.height * ratio);
+
+            const canvas = document.createElement('canvas');
+            canvas.width  = w;
+            canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+            box.innerHTML = `<img src="${canvas.toDataURL('image/jpeg', 0.85)}" alt="Aperçu"
+                style="width:72px;height:72px;border-radius:50%;object-fit:cover;
+                       border:3px solid #e63946;display:block;">`;
         };
-        reader.readAsDataURL(file);
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            box.innerHTML = `<div style="width:72px;height:72px;border-radius:50%;background:#fee2e2;
+                display:flex;align-items:center;justify-content:center;color:#ef4444;">
+                <i class="fas fa-times"></i></div>`;
+        };
+        img.src = url;
     }
 });
 </script>
