@@ -19,6 +19,8 @@ class HomeController extends BaseController {
         $reservationConditions = $settings->get('reservation_conditions', '');
         $reservationDeposit    = $settings->get('reservation_deposit', '300');
         $reservationHoldHours  = $settings->get('reservation_hold_hours', '72');
+        $heroTitle             = $settings->get('hero_title', 'Votre prochaine voiture vous attend');
+        $heroSubtitle          = $settings->get('hero_subtitle', 'Découvrez notre sélection de véhicules d\'occasion soigneusement contrôlés.');
 
         $this->render('home/index', [
             'title'        => 'La Bonne Occaz - Véhicules d\'occasion de qualité',
@@ -32,6 +34,8 @@ class HomeController extends BaseController {
             'reservationConditions' => $reservationConditions,
             'reservationDeposit'    => $reservationDeposit,
             'reservationHoldHours'  => $reservationHoldHours,
+            'heroTitle'             => $heroTitle,
+            'heroSubtitle'          => $heroSubtitle,
         ]);
     }
 

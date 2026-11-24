@@ -20,11 +20,8 @@
             <div class="hero-badge">
                 <i class="fas fa-star me-2"></i>Spécialiste véhicules d'occasion
             </div>
-            <h1 class="hero-title">Votre prochaine voiture<br><span class="text-gradient">vous attend ici</span></h1>
-            <p class="hero-subtitle">
-                Découvrez notre sélection de véhicules d'occasion soigneusement contrôlés.<br>
-                Prix transparents · Qualité garantie · Service personnalisé
-            </p>
+            <h1 class="hero-title"><?= nl2br(htmlspecialchars($heroTitle ?? 'Votre prochaine voiture vous attend ici')) ?></h1>
+            <p class="hero-subtitle"><?= nl2br(htmlspecialchars($heroSubtitle ?? 'Découvrez notre sélection de véhicules d\'occasion soigneusement contrôlés.')) ?></p>
             <div class="hero-actions">
                 <a href="<?= BASE_URL ?>/vehicules" class="btn btn-hero-primary">
                     <i class="fas fa-th-large me-2"></i>Découvrir nos véhicules
@@ -476,7 +473,7 @@
         </div>
 
         <?php if (!empty($reservationConditions)): ?>
-        <!-- Conditions complètes (repliables) -->
+        <!-- Conditions complètes (repliables + case à cocher) -->
         <div class="res-conditions-block mt-5">
             <div class="res-conditions-block__header" id="resConditionsToggle" role="button" aria-expanded="false">
                 <span><i class="fas fa-file-alt me-2"></i>Lire les conditions complètes de réservation</span>
@@ -485,6 +482,13 @@
             <div class="res-conditions-block__body" id="resConditionsBody">
                 <div class="res-conditions-text">
                     <?= nl2br(htmlspecialchars($reservationConditions)) ?>
+                </div>
+                <!-- Case à cocher -->
+                <div class="res-conditions-accept mt-3">
+                    <label class="res-conditions-accept__label">
+                        <input type="checkbox" id="resConditionsCheck">
+                        <span>J'ai lu et j'accepte les conditions de réservation, notamment le versement d'un acompte de <strong><?= htmlspecialchars($reservationDeposit ?? '300') ?> €</strong>.</span>
+                    </label>
                 </div>
             </div>
         </div>

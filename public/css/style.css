@@ -715,11 +715,25 @@ a:hover { color: var(--primary-dark); }
     transition: max-height .4s ease, padding .3s ease;
 }
 .res-conditions-block__body.open {
-    max-height: 600px;
+    max-height: 9999px; /* illimité — s'adapte au contenu */
 }
 .res-conditions-text {
     padding: 1.4rem;
     font-size: .88rem; color: var(--text); line-height: 1.8;
+}
+/* Case à cocher acceptation dans l'accordéon accueil */
+.res-conditions-accept {
+    padding: 0 1.4rem 1.4rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+.res-conditions-accept__label {
+    display: flex; align-items: flex-start; gap: .7rem;
+    cursor: pointer; font-size: .88rem; color: var(--text); line-height: 1.6;
+}
+.res-conditions-accept__label input[type="checkbox"] {
+    width: 18px; height: 18px; min-width: 18px;
+    margin-top: .15rem; accent-color: var(--primary); cursor: pointer;
 }
 
 /* ================================================================
@@ -757,7 +771,11 @@ html, body {
   .hero-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
   .hero-subtitle { font-size: .95rem; }
   .btn-hero-primary,
-  .btn-hero-secondary { width: 100%; justify-content: center; }
+  .btn-hero-secondary {
+    width: 100%; justify-content: center;
+    padding: .65rem 1.2rem;
+    font-size: .85rem;
+  }
   .hero-actions { flex-direction: column; }
 
   /* Quick search */
