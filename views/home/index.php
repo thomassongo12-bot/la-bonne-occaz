@@ -1,8 +1,23 @@
 ﻿<!-- ================================================================
-     HERO
+     HERO — Slider automatique
 ================================================================ -->
 <section class="hero-section" id="hero">
+
+    <!-- Slides background -->
+    <div class="hero-slides" aria-hidden="true">
+        <div class="hero-slide hero-slide--active" style="background-image:url('<?= BASE_URL ?>/public/images/hero.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero2.jpg')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero3.webp')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero4.webp')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero5.webp')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero6.webp')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero7.webp')"></div>
+        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero8.jpg')"></div>
+    </div>
+
     <div class="hero-bg-overlay"></div>
+
+    <!-- Contenu -->
     <div class="container">
         <div class="hero-content">
             <div class="hero-badge">
@@ -38,6 +53,15 @@
             </div>
         </div>
     </div>
+
+    <!-- Indicateurs de slides -->
+    <div class="hero-dots" aria-label="Navigation diaporama">
+        <?php for ($i = 0; $i < 8; $i++): ?>
+        <button class="hero-dot<?= $i === 0 ? ' hero-dot--active' : '' ?>"
+                data-slide="<?= $i ?>" aria-label="Slide <?= $i + 1 ?>"></button>
+        <?php endfor; ?>
+    </div>
+
     <div class="hero-scroll-indicator">
         <div class="scroll-line"></div>
         <span>Défiler</span>
@@ -395,6 +419,89 @@
     </div>
 </section>
 <?php endif; ?>
+
+<!-- ================================================================
+     CONDITIONS DE RÉSERVATION
+================================================================ -->
+<section class="reservation-info-section section-padding bg-light-custom">
+    <div class="container">
+        <div class="section-header text-center">
+            <span class="section-badge"><i class="fas fa-calendar-check me-1"></i>Réservation</span>
+            <h2 class="section-title">Comment réserver un véhicule ?</h2>
+            <p class="section-subtitle">Tout ce que vous devez savoir avant de réserver</p>
+        </div>
+
+        <div class="row g-4 mt-2">
+
+            <!-- Bloc acompte -->
+            <div class="col-lg-4 col-md-6">
+                <div class="res-info-card res-info-card--deposit">
+                    <div class="res-info-card__icon">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                    <h3 class="res-info-card__title">Acompte de réservation</h3>
+                    <div class="res-info-card__value"><?= htmlspecialchars($reservationDeposit ?? '300') ?> €</div>
+                    <p class="res-info-card__desc">
+                        Un acompte est demandé pour confirmer votre réservation.
+                        Il sera déduit du prix total lors de l'achat.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Bloc durée -->
+            <div class="col-lg-4 col-md-6">
+                <div class="res-info-card res-info-card--duration">
+                    <div class="res-info-card__icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="res-info-card__title">Durée de maintien</h3>
+                    <div class="res-info-card__value"><?= htmlspecialchars($reservationHoldHours ?? '72') ?>h</div>
+                    <p class="res-info-card__desc">
+                        Le véhicule est bloqué pour vous pendant cette durée après confirmation de votre réservation.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Bloc documents -->
+            <div class="col-lg-4 col-md-12">
+                <div class="res-info-card res-info-card--docs">
+                    <div class="res-info-card__icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3 class="res-info-card__title">Documents requis</h3>
+                    <div class="res-info-card__value"><i class="fas fa-check-circle text-success" style="font-size:1.6rem"></i></div>
+                    <p class="res-info-card__desc">
+                        Présentez-vous avec une pièce d'identité valide et confirmez votre réservation dans les 24h.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <?php if (!empty($reservationConditions)): ?>
+        <!-- Conditions complètes (repliables) -->
+        <div class="res-conditions-block mt-5">
+            <div class="res-conditions-block__header" id="resConditionsToggle" role="button" aria-expanded="false">
+                <span><i class="fas fa-file-alt me-2"></i>Lire les conditions complètes de réservation</span>
+                <i class="fas fa-chevron-down res-conditions-block__chevron"></i>
+            </div>
+            <div class="res-conditions-block__body" id="resConditionsBody">
+                <div class="res-conditions-text">
+                    <?= nl2br(htmlspecialchars($reservationConditions)) ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- CTA réservation -->
+        <div class="text-center mt-5">
+            <a href="<?= BASE_URL ?>/vehicules" class="btn btn-primary-custom btn-lg">
+                <i class="fas fa-search me-2"></i>Voir les véhicules disponibles
+            </a>
+        </div>
+
+    </div>
+</section>
 
 <!-- ================================================================
      CALL TO ACTION (sans "Vendre le mien")

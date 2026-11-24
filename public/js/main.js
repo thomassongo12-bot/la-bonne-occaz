@@ -183,6 +183,65 @@ const LBO = (() => {
   }
 
   // ================================================================
+  // HERO SLIDER — défilement automatique
+  // ================================================================
+  function initHeroSlider() {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots   = document.querySelectorAll('.hero-dot');
+    if (!slides.length) return;
+
+    let current  = 0;
+    let timer    = null;
+    const DELAY  = 5000; // 5 secondes par slide
+
+    function goTo(index) {
+      slides[current].classList.remove('hero-slide--active');
+      dots[current]?.classList.remove('hero-dot--active');
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add('hero-slide--active');
+      dots[current]?.classList.add('hero-dot--active');
+    }
+
+    function next() { goTo(current + 1); }
+
+    function startAuto() {
+      clearInterval(timer);
+      timer = setInterval(next, DELAY);
+    }
+
+    // Clic sur les dots
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => { goTo(i); startAuto(); });
+    });
+
+    // Pause au survol
+    const heroSection = document.getElementById('hero');
+    heroSection?.addEventListener('mouseenter', () => clearInterval(timer));
+    heroSection?.addEventListener('mouseleave', startAuto);
+
+    // Pause si onglet caché
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? clearInterval(timer) : startAuto();
+    });
+
+    startAuto();
+  }
+
+  // ================================================================
+  // CONDITIONS RÉSERVATION — accordéon accueil
+  // ================================================================
+  function initResConditions() {
+    const toggle = document.getElementById('resConditionsToggle');
+    const body   = document.getElementById('resConditionsBody');
+    if (!toggle || !body) return;
+
+    toggle.addEventListener('click', () => {
+      const isOpen = body.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+  }
+
+  // ================================================================
   // INIT
   // ================================================================
   document.addEventListener('DOMContentLoaded', () => {
@@ -192,6 +251,8 @@ const LBO = (() => {
     initFormValidation();
     initAlerts();
     initAnimations();
+    initHeroSlider();
+    initResConditions();
   });
 
   return { initFavorites, getFavorites, showToast };

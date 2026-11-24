@@ -14,6 +14,12 @@ class HomeController extends BaseController {
         $testimonials = $testimonialModel->getActive(5);
         $brands       = $brandModel->getAllWithCount();
 
+        // Conditions de réservation pour la section accueil
+        $settings = new SiteSettings();
+        $reservationConditions = $settings->get('reservation_conditions', '');
+        $reservationDeposit    = $settings->get('reservation_deposit', '300');
+        $reservationHoldHours  = $settings->get('reservation_hold_hours', '72');
+
         $this->render('home/index', [
             'title'        => 'La Bonne Occaz - Véhicules d\'occasion de qualité',
             'metaDesc'     => 'La Bonne Occaz, spécialiste en véhicules d\'occasion multimarques. Large choix, prix transparents, service professionnel.',
@@ -23,6 +29,9 @@ class HomeController extends BaseController {
             'fuel_types'   => $fuelModel,
             'transmissions'=> $transmModel,
             'flash'        => $this->getFlash(),
+            'reservationConditions' => $reservationConditions,
+            'reservationDeposit'    => $reservationDeposit,
+            'reservationHoldHours'  => $reservationHoldHours,
         ]);
     }
 

@@ -129,20 +129,37 @@ a:hover { color: var(--primary-dark); }
 .main-content > .page-hero { margin-top: 0; }
 
 /* ================================================================
-   HERO — colle directement sous la navbar
+   HERO — Slider automatique
 ================================================================ */
 .hero-section {
     position: relative;
     min-height: 100vh;
-    padding-top: var(--header-height);   /* espace sous la navbar */
+    padding-top: var(--header-height);
     margin-top: 0;
-    background: url('../images/hero.jpg') center/cover no-repeat;
     display: flex; align-items: center;
     overflow: hidden;
     box-sizing: border-box;
+    /* plus de background statique — géré par .hero-slides */
 }
-.hero-bg-overlay {
+
+/* Conteneur des slides (en arrière-plan absolu) */
+.hero-slides {
+    position: absolute; inset: 0; z-index: 0;
+}
+.hero-slide {
     position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    will-change: opacity;
+}
+.hero-slide--active { opacity: 1; }
+
+/* Overlay reste au-dessus des slides */
+.hero-bg-overlay {
+    position: absolute; inset: 0; z-index: 1;
     background: linear-gradient(
         135deg,
         rgba(29,29,27,.88) 0%,
@@ -150,6 +167,28 @@ a:hover { color: var(--primary-dark); }
         rgba(230,57,70,.18) 100%
     );
 }
+
+/* Contenu au-dessus de l'overlay */
+.hero-section .container { position: relative; z-index: 2; }
+
+/* Points de navigation */
+.hero-dots {
+    position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 3;
+}
+.hero-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,.35); border: none; padding: 0;
+    cursor: pointer; transition: all .3s ease;
+}
+.hero-dot--active,
+.hero-dot:hover {
+    background: var(--primary);
+    transform: scale(1.3);
+}
+
+/* scroll indicator au-dessus des dots */
+.hero-scroll-indicator { z-index: 3; }
 .hero-content {
     position: relative; z-index: 2;
     padding: 60px 0 50px; max-width: 680px;
@@ -601,6 +640,87 @@ a:hover { color: var(--primary-dark); }
 .back-to-top.show { opacity: 1; transform: translateY(0); }
 .back-to-top:hover { background: var(--primary-dark); transform: translateY(-3px); }
 .flash-container { z-index: 9999; }
+
+/* ================================================================
+   SECTION CONDITIONS DE RÉSERVATION (accueil)
+================================================================ */
+.res-info-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 2rem 1.6rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    height: 100%;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.res-info-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.res-info-card--deposit::before { background: var(--primary); }
+.res-info-card--duration::before { background: #3b82f6; }
+.res-info-card--docs::before    { background: #10b981; }
+.res-info-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+.res-info-card__icon {
+    width: 60px; height: 60px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin: 0 auto 1.2rem;
+}
+.res-info-card--deposit .res-info-card__icon { background: rgba(230,57,70,.1);  color: var(--primary); }
+.res-info-card--duration .res-info-card__icon{ background: rgba(59,130,246,.1); color: #3b82f6; }
+.res-info-card--docs .res-info-card__icon    { background: rgba(16,185,129,.1); color: #10b981; }
+
+.res-info-card__title {
+    font-size: .95rem; font-weight: 700; color: var(--dark); margin-bottom: .8rem;
+}
+.res-info-card__value {
+    font-size: 2.2rem; font-weight: 800; color: var(--dark);
+    line-height: 1; margin-bottom: .8rem;
+}
+.res-info-card--deposit .res-info-card__value { color: var(--primary); }
+.res-info-card--duration .res-info-card__value{ color: #3b82f6; }
+.res-info-card__desc {
+    font-size: .85rem; color: var(--text-muted); line-height: 1.65; margin: 0;
+}
+
+/* Bloc conditions repliable */
+.res-conditions-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+.res-conditions-block__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.4rem;
+    background: var(--dark); color: #fff;
+    cursor: pointer; user-select: none;
+    font-size: .9rem; font-weight: 600;
+    transition: background .2s;
+}
+.res-conditions-block__header:hover { background: var(--dark-soft); }
+.res-conditions-block__chevron {
+    transition: transform .3s ease;
+}
+.res-conditions-block__header[aria-expanded="true"] .res-conditions-block__chevron {
+    transform: rotate(180deg);
+}
+.res-conditions-block__body {
+    max-height: 0; overflow: hidden;
+    transition: max-height .4s ease, padding .3s ease;
+}
+.res-conditions-block__body.open {
+    max-height: 600px;
+}
+.res-conditions-text {
+    padding: 1.4rem;
+    font-size: .88rem; color: var(--text); line-height: 1.8;
+}
 
 /* ================================================================
    RESPONSIVE
