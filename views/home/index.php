@@ -501,13 +501,13 @@
             </div>
             <div class="res-conditions-block__body" id="resConditionsBody">
                 <div class="res-conditions-text">
-                    <?= nl2br(htmlspecialchars($reservationConditions)) ?>
+                    <?= formatConditions($reservationConditions ?? '') ?>
                 </div>
                 <!-- Case à cocher -->
                 <div class="res-conditions-accept mt-3">
                     <label class="res-conditions-accept__label">
                         <input type="checkbox" id="resConditionsCheck">
-                        <span>J'ai lu et j'accepte les conditions de réservation, notamment le versement d'un acompte de <strong><?= htmlspecialchars($reservationDeposit ?? '300') ?> €</strong>.</span>
+                        <span>J'ai lu et j'accepte les conditions de réservation.</span>
                     </label>
                 </div>
             </div>
@@ -523,12 +523,12 @@
             </div>
             <div class="res-conditions-block__body" id="resDeliveryBody">
                 <div class="res-conditions-text">
-                    <?= nl2br(htmlspecialchars($deliveryConditions)) ?>
+                    <?= formatConditions($deliveryConditions ?? '') ?>
                 </div>
                 <div class="res-conditions-accept mt-3">
                     <label class="res-conditions-accept__label">
                         <input type="checkbox" id="resDeliveryCheck">
-                        <span>J'ai lu et j'accepte les conditions de livraison, notamment les frais entre <strong>150 € et 300 €</strong> selon la distance, réglés par virement bancaire.</span>
+                        <span>J'ai lu et j'accepte les conditions de livraison.</span>
                     </label>
                 </div>
             </div>

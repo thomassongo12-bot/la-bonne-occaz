@@ -55,7 +55,7 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
             </div>
             <div class="reservation-conditions-card__body">
                 <div class="reservation-conditions-text">
-                    <?= nl2br(htmlspecialchars($conditions ?? '')) ?>
+                    <?= formatConditions($conditions ?? '') ?>
                 </div>
 
                 <?php if (!empty($deposit)): ?>
@@ -84,7 +84,7 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
             </div>
             <div class="reservation-conditions-card__body">
                 <div class="reservation-conditions-text">
-                    <?= nl2br(htmlspecialchars($deliveryConditions)) ?>
+                    <?= formatConditions($deliveryConditions ?? '') ?>
                 </div>
             </div>
         </div>
@@ -150,10 +150,7 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
                                 <label class="reservation-accept-label">
                                     <input type="checkbox" name="conditions_accepted" value="1" id="conditionsCheck" required>
                                     <span class="reservation-accept-text">
-                                        J'ai lu et j'accepte les <strong>conditions de réservation</strong> ci-contre,
-                                        notamment le versement d'un acompte de
-                                        <strong><?= htmlspecialchars($deposit ?? '300') ?> €</strong>
-                                        pour confirmer ma réservation.
+                                        J'ai lu et j'accepte les <strong>conditions de réservation</strong> ci-contre.
                                     </span>
                                 </label>
                                 <div class="reservation-accept-warning" id="conditionsWarning" style="display:none">

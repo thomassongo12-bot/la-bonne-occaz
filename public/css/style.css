@@ -826,6 +826,33 @@ a:hover { color: var(--primary-dark); }
     padding: 1.4rem;
     font-size: .88rem; color: var(--text); line-height: 1.8;
 }
+.res-conditions-text .cond-h4 {
+    font-size: 1rem; font-weight: 700; color: var(--dark);
+    margin: 1.2rem 0 .4rem; padding-bottom: .3rem;
+    border-bottom: 2px solid var(--primary);
+}
+.res-conditions-text .cond-h5 {
+    font-size: .88rem; font-weight: 700; color: var(--dark);
+    margin: .9rem 0 .3rem; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--text-muted);
+}
+.res-conditions-text .cond-p {
+    margin: 0 0 .6rem; line-height: 1.8;
+}
+/* Même style pour la page réservation */
+.reservation-conditions-text .cond-h4 {
+    font-size: 1rem; font-weight: 700; color: var(--dark);
+    margin: 1.2rem 0 .4rem; padding-bottom: .3rem;
+    border-bottom: 2px solid var(--primary);
+}
+.reservation-conditions-text .cond-h5 {
+    font-size: .82rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--text-muted);
+    margin: .9rem 0 .3rem;
+}
+.reservation-conditions-text .cond-p {
+    margin: 0 0 .6rem; line-height: 1.8; font-size: .88rem;
+}
 /* Case à cocher acceptation dans l'accordéon accueil */
 .res-conditions-accept {
     padding: 0 1.4rem 1.4rem;

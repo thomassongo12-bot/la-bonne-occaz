@@ -84,6 +84,33 @@ function cfg_address(): string { return defined('_DYN_ADDRESS') ? _DYN_ADDRESS :
 function cfg_hours():   string { return defined('_DYN_HOURS')   ? _DYN_HOURS   : CONTACT_HOURS; }
 function cfg_wa():      string { return defined('_DYN_WA')      ? _DYN_WA      : WHATSAPP_NUMBER; }
 
+/**
+ * Formate un texte de conditions stocké en BDD vers du HTML propre.
+ * Mini-syntaxe :
+ *   ## Titre principal   → <h4>
+ *   ### Sous-titre        → <h5>
+ *   **texte**             → <strong>
+ *   *texte*               → <em>
+ *   Ligne vide            → séparateur de paragraphe
+ */
+function formatConditions(string $text): string {
+    // Sécuriser d'abord
+    $t = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    // Titres ## → h4, ### → h5 (ordre important : ### avant ##)
+    $t = preg_replace('/^###\s*(.+)$/m',  '<h5 class="cond-h5">$1</h5>', $t);
+    $t = preg_replace('/^##\s*(.+)$/m',   '<h4 class="cond-h4">$1</h4>', $t);
+    // Gras **texte**
+    $t = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $t);
+    // Italique *texte*
+    $t = preg_replace('/\*(.+?)\*/', '<em>$1</em>', $t);
+    // Double saut de ligne → fermeture/ouverture de paragraphe
+    $t = preg_replace('/\n{2,}/', '</p><p class="cond-p">', $t);
+    // Saut de ligne simple → <br>
+    $t = str_replace("\n", '<br>', $t);
+    // Envelopper dans un paragraphe
+    return '<p class="cond-p">' . $t . '</p>';
+}
+
 // Autoload
 spl_autoload_register(function ($class) {
     $dirs = [
