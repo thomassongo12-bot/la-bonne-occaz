@@ -11,7 +11,7 @@ class HomeController extends BaseController {
         $transmModel     = $this->getTransmissions();
 
         $featured     = $vehicleModel->getFeatured(6);
-        $testimonials = $testimonialModel->getActive(5);
+        $testimonials = $testimonialModel->getActive();
         $brands       = $brandModel->getAllWithCount();
 
         // Conditions de réservation pour la section accueil

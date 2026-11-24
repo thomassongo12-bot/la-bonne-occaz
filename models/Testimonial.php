@@ -3,11 +3,8 @@ class Testimonial {
     private PDO $db;
     public function __construct() { $this->db = Database::getInstance(); }
 
-    public function getActive(int $limit = 6): array {
-        $s = $this->db->prepare("SELECT * FROM testimonials WHERE is_active=1 ORDER BY sort_order, id DESC LIMIT :l");
-        $s->bindValue(':l', $limit, PDO::PARAM_INT);
-        $s->execute();
-        return $s->fetchAll();
+    public function getActive(): array {
+        return $this->db->query("SELECT * FROM testimonials WHERE is_active=1 ORDER BY sort_order, id DESC")->fetchAll();
     }
 
     public function getAll(int $page=1, int $per=20): array {
