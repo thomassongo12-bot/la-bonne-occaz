@@ -17,7 +17,6 @@ class HomeController extends BaseController {
         // Conditions de réservation pour la section accueil
         $settings = new SiteSettings();
         $reservationConditions = $settings->get('reservation_conditions', '');
-        $reservationDeposit    = $settings->get('reservation_deposit', '300');
         $reservationHoldHours  = $settings->get('reservation_hold_hours', '72');
         $heroTitle             = $settings->get('hero_title', 'Votre prochaine voiture vous attend');
         $heroSubtitle          = $settings->get('hero_subtitle', 'Découvrez notre sélection de véhicules d\'occasion soigneusement contrôlés.');
@@ -33,7 +32,6 @@ class HomeController extends BaseController {
             'transmissions'=> $transmModel,
             'flash'        => $this->getFlash(),
             'reservationConditions' => $reservationConditions,
-            'reservationDeposit'    => $reservationDeposit,
             'reservationHoldHours'  => $reservationHoldHours,
             'heroTitle'             => $heroTitle,
             'heroSubtitle'          => $heroSubtitle,

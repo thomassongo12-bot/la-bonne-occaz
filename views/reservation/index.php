@@ -58,16 +58,8 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
                     <?= formatConditions($conditions ?? '') ?>
                 </div>
 
-                <?php if (!empty($deposit)): ?>
-                <div class="reservation-deposit-badge mt-3">
-                    <i class="fas fa-euro-sign me-2"></i>
-                    Acompte requis : <strong><?= htmlspecialchars($deposit) ?> €</strong>
-                    <span class="text-muted small ms-2">(non remboursable en cas de désistement)</span>
-                </div>
-                <?php endif; ?>
-
                 <?php if (!empty($holdHours)): ?>
-                <div class="reservation-hold-badge mt-2">
+                <div class="reservation-hold-badge mt-3">
                     <i class="fas fa-clock me-2"></i>
                     Véhicule réservé pendant <strong><?= htmlspecialchars($holdHours) ?> heures</strong> après confirmation
                 </div>

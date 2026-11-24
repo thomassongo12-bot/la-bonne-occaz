@@ -180,7 +180,11 @@ foreach ($groups['branding'] ?? [] as $s) {
         </div>
         <div class="admin-card__body">
             <div class="row g-3">
-                <?php foreach ($settings as $s):
+                <?php
+                // Clés à masquer (supprimées du site)
+                $hiddenKeys = ['reservation_deposit', 'reservation_hold_hours'];
+                foreach ($settings as $s):
+                    if (in_array($s['setting_key'], $hiddenKeys)) continue;
                     $si = $socialIcons[$s['setting_key']] ?? null;
                 ?>
                 <div class="col-md-6">

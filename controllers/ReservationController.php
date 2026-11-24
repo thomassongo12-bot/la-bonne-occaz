@@ -15,11 +15,10 @@ class ReservationController extends BaseController {
         }
 
         $settings = new SiteSettings();
-        $conditions      = $settings->get('reservation_conditions');
-        $deposit         = $settings->get('reservation_deposit', '300');
-        $holdHours       = $settings->get('reservation_hold_hours', '72');
+        $conditions         = $settings->get('reservation_conditions');
+        $holdHours          = $settings->get('reservation_hold_hours', '72');
         $deliveryConditions = $settings->get('delivery_conditions', '');
-        $images          = $vehicleModel->getImages($vehicle['id']);
+        $images             = $vehicleModel->getImages($vehicle['id']);
 
         $this->render('reservation/index', [
             'title'      => 'Réserver — ' . ($vehicle['brand_name']??'') . ' ' . $vehicle['model'],
@@ -27,7 +26,6 @@ class ReservationController extends BaseController {
             'vehicle'    => $vehicle,
             'images'     => $images,
             'conditions' => $conditions,
-            'deposit'    => $deposit,
             'holdHours'  => $holdHours,
             'deliveryConditions' => $deliveryConditions,
             'flash'      => $this->getFlash(),
@@ -136,7 +134,7 @@ class ReservationController extends BaseController {
             "Votre demande de réservation pour le véhicule suivant a bien été enregistrée :\n\n" .
             "→ " . ($vehicle['brand_name']??'') . " " . $vehicle['model'] . " (" . $vehicle['year'] . ")\n" .
             "→ Prix : " . number_format($vehicle['price'],0,',',' ') . " €\n\n" .
-            "Notre équipe vous contactera dans les 24h pour confirmer les détails et vous communiquer les modalités de paiement de l'acompte.\n\n" .
+            "Notre équipe vous contactera dans les 24h pour confirmer les détails et vous communiquer les prochaines étapes.\n\n" .
             "Merci de votre confiance,\nL'équipe La Bonne Occaz\n" . cfg_phone();
         @mail($to, $subject, $body, "From: " . cfg_email() . "\r\nContent-Type: text/plain; charset=UTF-8");
     }

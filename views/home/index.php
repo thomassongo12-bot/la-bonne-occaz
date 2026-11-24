@@ -435,57 +435,70 @@
 <?php endif; ?>
 
 <!-- ================================================================
-     CONDITIONS DE RÉSERVATION
+     CONDITIONS DE RÉSERVATION — étapes de livraison
 ================================================================ -->
 <section class="reservation-info-section section-padding bg-light-custom">
     <div class="container">
         <div class="section-header text-center">
-            <span class="section-badge"><i class="fas fa-calendar-check me-1"></i>Réservation</span>
+            <span class="section-badge"><i class="fas fa-truck me-1"></i>Livraison</span>
             <h2 class="section-title">Comment réserver un véhicule ?</h2>
-            <p class="section-subtitle">Tout ce que vous devez savoir avant de réserver</p>
+            <p class="section-subtitle">Un processus simple, transparent et sécurisé de la réservation à la livraison</p>
         </div>
 
         <div class="row g-4 mt-2">
 
-            <!-- Bloc acompte -->
-            <div class="col-lg-4 col-md-6">
-                <div class="res-info-card res-info-card--deposit">
+            <!-- Étape 1 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="res-info-card res-info-card--step1">
                     <div class="res-info-card__icon">
-                        <i class="fas fa-euro-sign"></i>
+                        <i class="fas fa-mouse-pointer"></i>
                     </div>
-                    <h3 class="res-info-card__title">Acompte de réservation</h3>
-                    <div class="res-info-card__value"><?= htmlspecialchars($reservationDeposit ?? '300') ?> €</div>
+                    <div class="res-info-card__step">Étape 1</div>
+                    <h3 class="res-info-card__title">Choisissez votre véhicule</h3>
                     <p class="res-info-card__desc">
-                        Un acompte est demandé pour confirmer votre réservation.
-                        Il sera déduit du prix total lors de l'achat.
+                        Parcourez notre catalogue et sélectionnez le véhicule qui vous correspond. Réservez-le en ligne en quelques clics.
                     </p>
                 </div>
             </div>
 
-            <!-- Bloc durée -->
-            <div class="col-lg-4 col-md-6">
-                <div class="res-info-card res-info-card--duration">
+            <!-- Étape 2 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="res-info-card res-info-card--step2">
                     <div class="res-info-card__icon">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-file-alt"></i>
                     </div>
-                    <h3 class="res-info-card__title">Durée de maintien</h3>
-                    <div class="res-info-card__value"><?= htmlspecialchars($reservationHoldHours ?? '72') ?>h</div>
+                    <div class="res-info-card__step">Étape 2</div>
+                    <h3 class="res-info-card__title">Validation du dossier</h3>
                     <p class="res-info-card__desc">
-                        Le véhicule est bloqué pour vous pendant cette durée après confirmation de votre réservation.
+                        Notre équipe vous contacte sous 24h pour valider votre dossier et confirmer les modalités de livraison.
                     </p>
                 </div>
             </div>
 
-            <!-- Bloc documents -->
-            <div class="col-lg-4 col-md-12">
-                <div class="res-info-card res-info-card--docs">
+            <!-- Étape 3 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="res-info-card res-info-card--step3">
                     <div class="res-info-card__icon">
-                        <i class="fas fa-id-card"></i>
+                        <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <h3 class="res-info-card__title">Documents requis</h3>
-                    <div class="res-info-card__value"><i class="fas fa-check-circle text-success" style="font-size:1.6rem"></i></div>
+                    <div class="res-info-card__step">Étape 3</div>
+                    <h3 class="res-info-card__title">Règlement des frais</h3>
                     <p class="res-info-card__desc">
-                        Présentez-vous avec une pièce d'identité valide et confirmez votre réservation dans les 24h.
+                        Les frais de livraison (150 € – 300 € selon la distance) sont réglés par virement bancaire avant expédition.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Étape 4 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="res-info-card res-info-card--step4">
+                    <div class="res-info-card__icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="res-info-card__step">Étape 4</div>
+                    <h3 class="res-info-card__title">Livraison en 24–48h</h3>
+                    <p class="res-info-card__desc">
+                        Le véhicule est acheminé par notre prestataire logistique. Un numéro de suivi vous est communiqué jusqu'à la livraison.
                     </p>
                 </div>
             </div>
@@ -493,7 +506,6 @@
         </div>
 
         <?php if (!empty($reservationConditions)): ?>
-        <!-- Conditions complètes (repliables + case à cocher) -->
         <div class="res-conditions-block mt-5">
             <div class="res-conditions-block__header" id="resConditionsToggle" role="button" aria-expanded="false">
                 <span><i class="fas fa-file-alt me-2"></i>Lire les conditions complètes de réservation</span>
@@ -503,7 +515,6 @@
                 <div class="res-conditions-text">
                     <?= formatConditions($reservationConditions ?? '') ?>
                 </div>
-                <!-- Case à cocher -->
                 <div class="res-conditions-accept mt-3">
                     <label class="res-conditions-accept__label">
                         <input type="checkbox" id="resConditionsCheck">
@@ -515,8 +526,7 @@
         <?php endif; ?>
 
         <?php if (!empty($deliveryConditions)): ?>
-        <!-- Conditions de livraison (repliables + case à cocher) -->
-        <div class="res-conditions-block mt-3" style="--header-bg:#1d4ed8">
+        <div class="res-conditions-block mt-3">
             <div class="res-conditions-block__header res-conditions-block__header--blue" id="resDeliveryToggle" role="button" aria-expanded="false">
                 <span><i class="fas fa-truck me-2"></i>Lire les conditions de livraison</span>
                 <i class="fas fa-chevron-down res-conditions-block__chevron"></i>
@@ -535,7 +545,6 @@
         </div>
         <?php endif; ?>
 
-        <!-- CTA réservation -->
         <div class="text-center mt-5">
             <a href="<?= BASE_URL ?>/vehicules" class="btn btn-primary-custom btn-lg">
                 <i class="fas fa-search me-2"></i>Voir les véhicules disponibles

@@ -766,6 +766,10 @@ a:hover { color: var(--primary-dark); }
 .res-info-card--deposit::before { background: var(--primary); }
 .res-info-card--duration::before { background: #3b82f6; }
 .res-info-card--docs::before    { background: #10b981; }
+.res-info-card--step1::before   { background: var(--primary); }
+.res-info-card--step2::before   { background: #3b82f6; }
+.res-info-card--step3::before   { background: #f59e0b; }
+.res-info-card--step4::before   { background: #10b981; }
 .res-info-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 
 .res-info-card__icon {
@@ -776,6 +780,15 @@ a:hover { color: var(--primary-dark); }
 .res-info-card--deposit .res-info-card__icon { background: rgba(230,57,70,.1);  color: var(--primary); }
 .res-info-card--duration .res-info-card__icon{ background: rgba(59,130,246,.1); color: #3b82f6; }
 .res-info-card--docs .res-info-card__icon    { background: rgba(16,185,129,.1); color: #10b981; }
+.res-info-card--step1 .res-info-card__icon   { background: rgba(230,57,70,.1);  color: var(--primary); }
+.res-info-card--step2 .res-info-card__icon   { background: rgba(59,130,246,.1); color: #3b82f6; }
+.res-info-card--step3 .res-info-card__icon   { background: rgba(245,158,11,.1); color: #f59e0b; }
+.res-info-card--step4 .res-info-card__icon   { background: rgba(16,185,129,.1); color: #10b981; }
+
+.res-info-card__step {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--text-muted); margin-bottom: .3rem;
+}
 
 .res-info-card__title {
     font-size: .95rem; font-weight: 700; color: var(--dark); margin-bottom: .8rem;
