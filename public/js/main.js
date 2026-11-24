@@ -183,8 +183,99 @@ const LBO = (() => {
   }
 
   // ================================================================
-  // HERO SLIDER — défilement automatique
+  // CARROUSEL TÉMOIGNAGES
   // ================================================================
+  function initTestiCarousel() {
+    const track    = document.getElementById('testiTrack');
+    const viewport = document.getElementById('testiViewport');
+    const btnPrev  = document.getElementById('testiPrev');
+    const btnNext  = document.getElementById('testiNext');
+    if (!track) return;
+
+    const CARD_W   = () => track.querySelector('.testi-card')?.offsetWidth + 24 || 364; // largeur + gap
+    const HALF     = () => track.scrollWidth / 2; // moitié = les originaux
+
+    // Pause CSS animation et passer en scroll JS manuel
+    let offset  = 0;
+    let rafId   = null;
+    let speed   = 0.6; // px/frame
+    let paused  = false;
+    let dragStart = null;
+    let dragOffset = 0;
+
+    function startAnim() {
+      if (rafId) return;
+      function step() {
+        if (!paused) {
+          offset += speed;
+          // Reset quand on a parcouru la moitié (les clones)
+          if (offset >= HALF()) offset -= HALF();
+          track.style.transform = `translateX(${-offset}px)`;
+          track.style.animation = 'none'; // désactiver l'animation CSS
+        }
+        rafId = requestAnimationFrame(step);
+      }
+      rafId = requestAnimationFrame(step);
+    }
+
+    // Pause au survol
+    viewport.addEventListener('mouseenter', () => { paused = true; });
+    viewport.addEventListener('mouseleave', () => { paused = false; });
+
+    // Flèche suivante
+    btnNext?.addEventListener('click', () => {
+      offset += CARD_W();
+      if (offset >= HALF()) offset -= HALF();
+    });
+    // Flèche précédente
+    btnPrev?.addEventListener('click', () => {
+      offset -= CARD_W();
+      if (offset < 0) offset += HALF();
+    });
+
+    // Drag souris
+    viewport.addEventListener('mousedown', e => {
+      dragStart  = e.clientX;
+      dragOffset = offset;
+      paused     = true;
+    });
+    window.addEventListener('mousemove', e => {
+      if (dragStart === null) return;
+      const delta = dragStart - e.clientX;
+      offset = dragOffset + delta;
+      if (offset >= HALF()) offset -= HALF();
+      if (offset < 0)       offset += HALF();
+    });
+    window.addEventListener('mouseup', () => {
+      dragStart = null;
+      paused    = false;
+    });
+
+    // Touch
+    viewport.addEventListener('touchstart', e => {
+      dragStart  = e.touches[0].clientX;
+      dragOffset = offset;
+      paused     = true;
+    }, { passive: true });
+    viewport.addEventListener('touchmove', e => {
+      if (dragStart === null) return;
+      const delta = dragStart - e.touches[0].clientX;
+      offset = dragOffset + delta;
+      if (offset >= HALF()) offset -= HALF();
+      if (offset < 0)       offset += HALF();
+    }, { passive: true });
+    viewport.addEventListener('touchend', () => {
+      dragStart = null;
+      paused    = false;
+    });
+
+    // Pause si onglet caché
+    document.addEventListener('visibilitychange', () => {
+      paused = document.hidden;
+    });
+
+    startAnim();
+  }
   function initHeroSlider() {
     const slides = document.querySelectorAll('.hero-slide');
     const dots   = document.querySelectorAll('.hero-dot');
@@ -258,6 +349,7 @@ const LBO = (() => {
     initAnimations();
     initHeroSlider();
     initResConditions();
+    initTestiCarousel();
   });
 
   return { initFavorites, getFavorites, showToast };

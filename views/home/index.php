@@ -360,7 +360,7 @@
 <?php endif; ?>
 
 <!-- ================================================================
-     TÉMOIGNAGES (avec photo de profil)
+     TÉMOIGNAGES — carrousel défilement automatique
 ================================================================ -->
 <?php if (!empty($testimonials)): ?>
 <section class="testimonials-section section-padding">
@@ -369,47 +369,67 @@
             <span class="section-badge">Ce que disent nos clients</span>
             <h2 class="section-title">Témoignages</h2>
         </div>
-        <div class="row g-4">
-            <?php foreach ($testimonials as $t): ?>
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
+    </div>
+
+    <!-- Carrousel pleine largeur -->
+    <div class="testi-carousel-wrapper">
+
+        <!-- Flèche gauche -->
+        <button class="testi-arrow testi-arrow--prev" id="testiPrev" aria-label="Précédent">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <div class="testi-carousel-viewport" id="testiViewport">
+            <div class="testi-carousel-track" id="testiTrack">
+
+                <?php
+                // Double les cartes pour créer l'illusion d'un scroll infini
+                $allT = array_merge($testimonials, $testimonials);
+                foreach ($allT as $t):
+                ?>
+                <div class="testi-card">
+                    <div class="testi-card__stars">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <i class="fas fa-star<?= $i > $t['rating'] ? ' opacity-25' : '' ?>"></i>
+                        <i class="fas fa-star<?= $i > $t['rating'] ? ' testi-card__star--off' : '' ?>"></i>
                         <?php endfor; ?>
                     </div>
-                    <blockquote class="testimonial-text">"<?= htmlspecialchars($t['content']) ?>"</blockquote>
-                    <div class="testimonial-author">
-                        <!-- Photo de profil ou initiale -->
+                    <blockquote class="testi-card__text">"<?= htmlspecialchars($t['content']) ?>"</blockquote>
+                    <div class="testi-card__author">
                         <?php if (!empty($t['photo_url'])): ?>
-                        <div class="author-avatar author-avatar--photo">
+                        <div class="testi-card__avatar testi-card__avatar--photo">
                             <img src="<?= htmlspecialchars($t['photo_url']) ?>"
-                                 alt="<?= htmlspecialchars($t['author']) ?>"
-                                 loading="lazy">
+                                 alt="<?= htmlspecialchars($t['author']) ?>" loading="lazy">
                         </div>
                         <?php else: ?>
-                        <div class="author-avatar">
+                        <div class="testi-card__avatar">
                             <?= strtoupper(mb_substr($t['author'], 0, 1)) ?>
                         </div>
                         <?php endif; ?>
                         <div>
-                            <div class="author-name"><?= htmlspecialchars($t['author']) ?></div>
+                            <div class="testi-card__name"><?= htmlspecialchars($t['author']) ?></div>
                             <?php if ($t['location']): ?>
-                            <div class="author-location">
+                            <div class="testi-card__meta">
                                 <i class="fas fa-map-marker-alt me-1"></i><?= htmlspecialchars($t['location']) ?>
                             </div>
                             <?php endif; ?>
                             <?php if ($t['vehicle_ref']): ?>
-                            <div class="author-vehicle">
+                            <div class="testi-card__meta">
                                 <i class="fas fa-car me-1"></i><?= htmlspecialchars($t['vehicle_ref']) ?>
                             </div>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
+                <?php endforeach; ?>
+
             </div>
-            <?php endforeach; ?>
         </div>
+
+        <!-- Flèche droite -->
+        <button class="testi-arrow testi-arrow--next" id="testiNext" aria-label="Suivant">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
     </div>
 </section>
 <?php endif; ?>

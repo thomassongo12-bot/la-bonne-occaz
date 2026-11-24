@@ -642,6 +642,109 @@ a:hover { color: var(--primary-dark); }
 .flash-container { z-index: 9999; }
 
 /* ================================================================
+   TÉMOIGNAGES — carrousel défilement automatique
+================================================================ */
+.testimonials-section { overflow: hidden; }
+
+.testi-carousel-wrapper {
+    position: relative;
+    padding: 0 50px; /* espace pour les flèches */
+}
+
+.testi-carousel-viewport {
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+}
+.testi-carousel-viewport:active { cursor: grabbing; }
+
+.testi-carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    /* animation CSS infinie — interrompue au hover/drag */
+    animation: testiScroll 30s linear infinite;
+    will-change: transform;
+}
+.testi-carousel-track:hover,
+.testi-carousel-track.paused { animation-play-state: paused; }
+
+@keyframes testiScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* -50% = déplace d'une moitié (les originaux) */
+}
+
+/* Carte */
+.testi-card {
+    flex: 0 0 340px;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    transition: box-shadow .3s, transform .3s;
+}
+.testi-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.testi-card__stars { color: #f9c74f; font-size: .9rem; }
+.testi-card__star--off { color: #dee2e6; }
+
+.testi-card__text {
+    font-size: .9rem; color: var(--text);
+    line-height: 1.7; flex: 1; font-style: italic;
+    margin: 0;
+    /* Limiter à 4 lignes */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.testi-card__author {
+    display: flex; align-items: center; gap: .8rem;
+    margin-top: auto;
+}
+.testi-card__avatar {
+    width: 44px; height: 44px; min-width: 44px;
+    border-radius: 50%;
+    background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem;
+    overflow: hidden;
+}
+.testi-card__avatar--photo img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+}
+.testi-card__name  { font-weight: 700; font-size: .9rem; color: var(--dark); }
+.testi-card__meta  { font-size: .75rem; color: var(--text-muted); }
+
+/* Flèches */
+.testi-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: #fff; border: 1px solid var(--border);
+    color: var(--dark); font-size: .9rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 5;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+.testi-arrow:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.testi-arrow--prev { left: 0; }
+.testi-arrow--next { right: 0; }
+
+@media (max-width: 768px) {
+    .testi-carousel-wrapper { padding: 0 36px; }
+    .testi-card { flex: 0 0 280px; padding: 1.3rem; }
+    .testi-arrow { width: 32px; height: 32px; font-size: .75rem; }
+}
+
+/* ================================================================
    SECTION CONDITIONS DE RÉSERVATION (accueil)
 ================================================================ */
 .res-info-card {
