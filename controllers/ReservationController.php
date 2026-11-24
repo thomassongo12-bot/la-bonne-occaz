@@ -80,7 +80,7 @@ class ReservationController extends BaseController {
             'last_name'           => $this->sanitize($_POST['last_name']),
             'email'               => filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL),
             'phone'               => $this->sanitize($_POST['phone']),
-            'message'             => $this->sanitize($_POST['message'] ?? ''),
+            'message'             => ($this->sanitize($_POST['city'] ?? '') ? 'Ville : ' . $this->sanitize($_POST['city']) . "\n\n" : '') . $this->sanitize($_POST['message'] ?? ''),
             'conditions_accepted' => true,
         ]);
 
@@ -119,7 +119,7 @@ class ReservationController extends BaseController {
         $ph = htmlspecialchars($_POST['phone']);
         $body =
             "Nouvelle réservation reçue :\n\n" .
-            "Client : $fn $ln\nEmail : $em\nTéléphone : $ph\n\n" .
+            "Client : $fn $ln\nEmail : $em\nTéléphone : $ph\nVille : " . htmlspecialchars($_POST['city'] ?? 'Non renseignée') . "\n\n" .
             "Véhicule : " . ($vehicle['brand_name']??'') . " " . $vehicle['model'] . " ({$vehicle['year']})\n" .
             "Prix : " . number_format($vehicle['price'],0,',',' ') . " €\n\n" .
             "Voir dans l'administration : " . BASE_URL . "/admin/reservations/view/{$reservationId}";

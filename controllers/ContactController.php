@@ -23,11 +23,13 @@ class ContactController extends BaseController {
         $ln     = $this->sanitize($_POST['last_name']  ?? '');
         $email  = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
         $phone  = $this->sanitize($_POST['phone']   ?? '');
+        $city   = $this->sanitize($_POST['city']    ?? '');
         $msg    = $this->sanitize($_POST['message'] ?? '');
 
         if (!$fn)    $errors[] = 'Le prénom est requis.';
         if (!$ln)    $errors[] = 'Le nom est requis.';
         if (!$email) $errors[] = 'Adresse e-mail invalide.';
+        if (!$city)  $errors[] = 'La ville est requise.';
         if (strlen($msg) < 10) $errors[] = 'Le message doit comporter au moins 10 caractères.';
 
         if ($errors) {
@@ -43,11 +45,10 @@ class ContactController extends BaseController {
             'last_name'  => $ln,
             'email'      => $email,
             'phone'      => $phone,
-            'message'    => $msg,
+            'message'    => ($city ? "Ville : $city\n\n" : '') . $msg,
         ]);
 
-        // Envoi email (si configuré)
-        $this->sendNotificationEmail($fn, $ln, $email, $phone, $msg);
+        $this->sendNotificationEmail($fn, $ln, $email, $phone, $city, $msg);
 
         $this->flashMessage('success', 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.');
         $this->redirect('/contact');
@@ -87,10 +88,10 @@ class ContactController extends BaseController {
         $this->redirect($slug ? '/vehicule/' . $slug : '/vehicules');
     }
 
-    private function sendNotificationEmail(string $fn, string $ln, string $email, string $phone, string $msg): void {
+    private function sendNotificationEmail(string $fn, string $ln, string $email, string $phone, string $city, string $msg): void {
         $to      = cfg_email();
         $subject = "Nouveau message - La Bonne Occaz";
-        $body    = "Nouveau message reçu :\n\nNom : $fn $ln\nEmail : $email\nTéléphone : $phone\n\nMessage :\n$msg";
+        $body    = "Nouveau message reçu :\n\nNom : $fn $ln\nEmail : $email\nTéléphone : $phone\nVille : $city\n\nMessage :\n$msg";
         $headers = "From: noreply@labonneoccaz.fr\r\nReply-To: $email";
         @mail($to, $subject, $body, $headers);
     }

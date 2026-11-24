@@ -40,6 +40,7 @@ class SellingController extends BaseController {
             'last_name'       => $this->sanitize($_POST['last_name']),
             'email'           => filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL),
             'phone'           => $this->sanitize($_POST['phone']),
+            'city'            => $this->sanitize($_POST['city'] ?? ''),
             'brand'           => $this->sanitize($_POST['brand']),
             'model'           => $this->sanitize($_POST['model']),
             'version'         => $this->sanitize($_POST['version']          ?? ''),
@@ -88,6 +89,7 @@ class SellingController extends BaseController {
         if (empty($_POST['last_name']))  $errors[] = 'Le nom est requis.';
         if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'Email invalide.';
         if (empty($_POST['phone']))      $errors[] = 'Le téléphone est requis.';
+        if (empty($_POST['city']))       $errors[] = 'La ville est requise.';
         if (empty($_POST['brand']))      $errors[] = 'La marque est requise.';
         if (empty($_POST['model']))      $errors[] = 'Le modèle est requis.';
         if (empty($_POST['year']) || (int)$_POST['year'] < 1990 || (int)$_POST['year'] > (int)date('Y') + 1)
@@ -103,7 +105,7 @@ class SellingController extends BaseController {
         $subject = "Nouvelle demande de vente/dépôt #$id - La Bonne Occaz";
         $body    = "Nouvelle demande de dépôt-vente :\n\n"
             . "Client : {$d['first_name']} {$d['last_name']}\n"
-            . "Email  : {$d['email']}\nTéléphone : {$d['phone']}\n\n"
+            . "Email  : {$d['email']}\nTéléphone : {$d['phone']}\nVille : " . ($d['city'] ?? 'Non renseignée') . "\n\n"
             . "Véhicule : {$d['brand']} {$d['model']} {$d['version']} ({$d['year']})\n"
             . "Kilométrage : {$d['mileage']} km\nCarburant : {$d['fuel_type']}\n"
             . "Prix souhaité : " . ($d['desired_price'] ? number_format($d['desired_price'],0,',',' ') . ' €' : 'Non renseigné') . "\n\n"

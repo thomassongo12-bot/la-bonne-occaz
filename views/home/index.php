@@ -27,8 +27,8 @@
                     <i class="fas fa-th-large me-2"></i>Découvrir nos véhicules
                     <span class="btn-arrow"><i class="fas fa-arrow-right"></i></span>
                 </a>
-                <a href="<?= BASE_URL ?>/contact" class="btn btn-hero-secondary">
-                    <i class="fas fa-phone-alt me-2"></i>Nous contacter
+                <a href="mailto:contact@labonneoccazz.com" class="btn btn-hero-secondary">
+                    <i class="fas fa-envelope me-2"></i>Nous contacter
                 </a>
             </div>
             <div class="hero-stats">

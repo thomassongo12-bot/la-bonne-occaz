@@ -68,6 +68,11 @@
                                     <label class="form-label">Téléphone <span class="text-danger">*</span></label>
                                     <input type="tel" name="phone" class="form-control" required>
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Ville <span class="text-danger">*</span></label>
+                                    <input type="text" name="city" class="form-control" placeholder="Ex : Paris, Lyon..." required>
+                                </div>
+                                <div class="col-md-6"></div>
                             </div>
                         </div>
 

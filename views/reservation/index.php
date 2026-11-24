@@ -127,10 +127,16 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
                             <input type="email" name="email" class="form-control" required
                                    value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                         </div>
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label class="form-label">Téléphone <span class="text-danger">*</span></label>
                             <input type="tel" name="phone" class="form-control" required
                                    value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ville <span class="text-danger">*</span></label>
+                            <input type="text" name="city" class="form-control" required
+                                   placeholder="Ex : Paris, Lyon..."
+                                   value="<?= htmlspecialchars($_POST['city'] ?? '') ?>">
                         </div>
                         <div class="col-12">
                             <label class="form-label">Message <small class="text-muted">(facultatif)</small></label>

@@ -38,6 +38,11 @@
                                 <label class="form-label">Téléphone</label>
                                 <input type="tel" name="phone" class="form-control" placeholder="06 XX XX XX XX">
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Ville <span class="text-danger">*</span></label>
+                                <input type="text" name="city" class="form-control" placeholder="Ex : Paris, Lyon..." required>
+                            </div>
+                            <div class="col-md-6"></div>
                             <div class="col-12">
                                 <label class="form-label">Message <span class="text-danger">*</span></label>
                                 <textarea name="message" class="form-control" rows="6"
