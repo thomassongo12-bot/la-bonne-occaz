@@ -704,6 +704,8 @@ a:hover { color: var(--primary-dark); }
     transition: background .2s;
 }
 .res-conditions-block__header:hover { background: var(--dark-soft); }
+.res-conditions-block__header--blue { background: #1d4ed8; }
+.res-conditions-block__header--blue:hover { background: #1e40af; }
 .res-conditions-block__chevron {
     transition: transform .3s ease;
 }

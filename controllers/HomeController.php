@@ -21,6 +21,7 @@ class HomeController extends BaseController {
         $reservationHoldHours  = $settings->get('reservation_hold_hours', '72');
         $heroTitle             = $settings->get('hero_title', 'Votre prochaine voiture vous attend');
         $heroSubtitle          = $settings->get('hero_subtitle', 'Découvrez notre sélection de véhicules d\'occasion soigneusement contrôlés.');
+        $deliveryConditions    = $settings->get('delivery_conditions', '');
 
         $this->render('home/index', [
             'title'        => 'La Bonne Occaz - Véhicules d\'occasion de qualité',
@@ -36,6 +37,7 @@ class HomeController extends BaseController {
             'reservationHoldHours'  => $reservationHoldHours,
             'heroTitle'             => $heroTitle,
             'heroSubtitle'          => $heroSubtitle,
+            'deliveryConditions'    => $deliveryConditions,
         ]);
     }
 

@@ -48,7 +48,7 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
         </div>
 
         <!-- Conditions de réservation -->
-        <div class="reservation-conditions-card">
+        <div class="reservation-conditions-card mb-4">
             <div class="reservation-conditions-card__header">
                 <i class="fas fa-file-contract me-2"></i>
                 Conditions de réservation
@@ -74,6 +74,21 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
                 <?php endif; ?>
             </div>
         </div>
+
+        <?php if (!empty($deliveryConditions)): ?>
+        <!-- Conditions de livraison -->
+        <div class="reservation-conditions-card">
+            <div class="reservation-conditions-card__header" style="background:#1d4ed8">
+                <i class="fas fa-truck me-2"></i>
+                Conditions de livraison
+            </div>
+            <div class="reservation-conditions-card__body">
+                <div class="reservation-conditions-text">
+                    <?= nl2br(htmlspecialchars($deliveryConditions)) ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
 
     </div>
 
@@ -123,7 +138,7 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
                                       placeholder="Questions, disponibilités, financement..."><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
                         </div>
 
-                        <!-- Acceptation des conditions -->
+                        <!-- Acceptation des conditions de réservation -->
                         <div class="col-12">
                             <div class="reservation-accept-block">
                                 <label class="reservation-accept-label">
@@ -141,6 +156,26 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
                                 </div>
                             </div>
                         </div>
+
+                        <?php if (!empty($deliveryConditions)): ?>
+                        <!-- Acceptation des conditions de livraison -->
+                        <div class="col-12">
+                            <div class="reservation-accept-block" style="border-color:#bfdbfe;background:#eff6ff;">
+                                <label class="reservation-accept-label">
+                                    <input type="checkbox" name="delivery_accepted" value="1" id="deliveryCheck" required>
+                                    <span class="reservation-accept-text" style="color:#1e3a5f">
+                                        J'ai lu et j'accepte les <strong>conditions de livraison</strong> ci-contre,
+                                        notamment les frais de livraison entre <strong>150 € et 300 €</strong>
+                                        selon la distance, réglés par virement bancaire.
+                                    </span>
+                                </label>
+                                <div class="reservation-accept-warning" id="deliveryWarning" style="display:none">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Vous devez accepter les conditions de livraison pour continuer.
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
 
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary-custom btn-lg w-100" id="submitReservation">
@@ -171,15 +206,31 @@ $imgUrl = $mainImg ? UPLOADS_URL.'/vehicles/'.$mainImg['filename'] : BASE_URL.'/
 
 <script>
 document.getElementById('reservationForm')?.addEventListener('submit', function(e) {
+    let blocked = false;
+
     const cb   = document.getElementById('conditionsCheck');
     const warn = document.getElementById('conditionsWarning');
-    if (!cb.checked) {
-        e.preventDefault();
+    if (cb && !cb.checked) {
         warn.style.display = 'block';
         cb.closest('.reservation-accept-block').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        blocked = true;
     }
+
+    const cb2   = document.getElementById('deliveryCheck');
+    const warn2 = document.getElementById('deliveryWarning');
+    if (cb2 && !cb2.checked) {
+        warn2.style.display = 'block';
+        if (!blocked) cb2.closest('.reservation-accept-block').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        blocked = true;
+    }
+
+    if (blocked) e.preventDefault();
 });
+
 document.getElementById('conditionsCheck')?.addEventListener('change', function() {
     document.getElementById('conditionsWarning').style.display = this.checked ? 'none' : 'block';
+});
+document.getElementById('deliveryCheck')?.addEventListener('change', function() {
+    document.getElementById('deliveryWarning').style.display = this.checked ? 'none' : 'block';
 });
 </script>

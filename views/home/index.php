@@ -494,6 +494,27 @@
         </div>
         <?php endif; ?>
 
+        <?php if (!empty($deliveryConditions)): ?>
+        <!-- Conditions de livraison (repliables + case à cocher) -->
+        <div class="res-conditions-block mt-3" style="--header-bg:#1d4ed8">
+            <div class="res-conditions-block__header res-conditions-block__header--blue" id="resDeliveryToggle" role="button" aria-expanded="false">
+                <span><i class="fas fa-truck me-2"></i>Lire les conditions de livraison</span>
+                <i class="fas fa-chevron-down res-conditions-block__chevron"></i>
+            </div>
+            <div class="res-conditions-block__body" id="resDeliveryBody">
+                <div class="res-conditions-text">
+                    <?= nl2br(htmlspecialchars($deliveryConditions)) ?>
+                </div>
+                <div class="res-conditions-accept mt-3">
+                    <label class="res-conditions-accept__label">
+                        <input type="checkbox" id="resDeliveryCheck">
+                        <span>J'ai lu et j'accepte les conditions de livraison, notamment les frais entre <strong>150 € et 300 €</strong> selon la distance, réglés par virement bancaire.</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- CTA réservation -->
         <div class="text-center mt-5">
             <a href="<?= BASE_URL ?>/vehicules" class="btn btn-primary-custom btn-lg">

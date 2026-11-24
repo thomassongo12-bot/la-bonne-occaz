@@ -231,13 +231,18 @@ const LBO = (() => {
   // CONDITIONS RÉSERVATION — accordéon accueil
   // ================================================================
   function initResConditions() {
-    const toggle = document.getElementById('resConditionsToggle');
-    const body   = document.getElementById('resConditionsBody');
-    if (!toggle || !body) return;
-
-    toggle.addEventListener('click', () => {
-      const isOpen = body.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', isOpen);
+    // Accordéon générique : toggle header → body
+    [
+      { headerId: 'resConditionsToggle', bodyId: 'resConditionsBody' },
+      { headerId: 'resDeliveryToggle',   bodyId: 'resDeliveryBody'   },
+    ].forEach(({ headerId, bodyId }) => {
+      const toggle = document.getElementById(headerId);
+      const body   = document.getElementById(bodyId);
+      if (!toggle || !body) return;
+      toggle.addEventListener('click', () => {
+        const isOpen = body.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen);
+      });
     });
   }
 

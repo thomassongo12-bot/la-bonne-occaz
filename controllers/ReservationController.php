@@ -15,10 +15,11 @@ class ReservationController extends BaseController {
         }
 
         $settings = new SiteSettings();
-        $conditions   = $settings->get('reservation_conditions');
-        $deposit      = $settings->get('reservation_deposit', '300');
-        $holdHours    = $settings->get('reservation_hold_hours', '72');
-        $images       = $vehicleModel->getImages($vehicle['id']);
+        $conditions      = $settings->get('reservation_conditions');
+        $deposit         = $settings->get('reservation_deposit', '300');
+        $holdHours       = $settings->get('reservation_hold_hours', '72');
+        $deliveryConditions = $settings->get('delivery_conditions', '');
+        $images          = $vehicleModel->getImages($vehicle['id']);
 
         $this->render('reservation/index', [
             'title'      => 'Réserver — ' . ($vehicle['brand_name']??'') . ' ' . $vehicle['model'],
@@ -28,6 +29,7 @@ class ReservationController extends BaseController {
             'conditions' => $conditions,
             'deposit'    => $deposit,
             'holdHours'  => $holdHours,
+            'deliveryConditions' => $deliveryConditions,
             'flash'      => $this->getFlash(),
             'csrf'       => $this->csrfToken(),
         ]);
@@ -61,6 +63,11 @@ class ReservationController extends BaseController {
         // Vérification conditions acceptées
         if (empty($_POST['conditions_accepted'])) {
             $this->flashMessage('error', 'Vous devez accepter les conditions de réservation pour continuer.');
+            $this->redirect('/reserver/' . $slug);
+            return;
+        }
+        if (empty($_POST['delivery_accepted'])) {
+            $this->flashMessage('error', 'Vous devez accepter les conditions de livraison pour continuer.');
             $this->redirect('/reserver/' . $slug);
             return;
         }
