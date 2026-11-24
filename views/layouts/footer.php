@@ -111,11 +111,7 @@
                     <p class="mb-0">&copy; <?= date('Y') ?> La Bonne Occaz. Tous droits réservés.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="<?= BASE_URL ?>/mentions-legales" class="footer-legal-link">Mentions légales</a>
-                    <span class="mx-2">·</span>
-                    <a href="<?= BASE_URL ?>/confidentialite" class="footer-legal-link">Confidentialité</a>
-                    <span class="mx-2">·</span>
-                    <a href="<?= BASE_URL ?>/cgv" class="footer-legal-link">CGV</a>
+                    <span class="footer-legal-link">&copy; <?= date('Y') ?> La Bonne Occaz. Tous droits réservés.</span>
                 </div>
             </div>
         </div>
