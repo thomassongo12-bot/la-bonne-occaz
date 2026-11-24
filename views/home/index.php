@@ -5,14 +5,11 @@
 
     <!-- Slides background -->
     <div class="hero-slides" aria-hidden="true">
-        <div class="hero-slide hero-slide--active" style="background-image:url('<?= BASE_URL ?>/public/images/hero.jpg')"></div>
-        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero2.jpg')"></div>
-        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero3.webp')"></div>
+        <div class="hero-slide hero-slide--active" style="background-image:url('<?= BASE_URL ?>/public/images/hero3.webp')"></div>
         <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero4.webp')"></div>
         <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero5.webp')"></div>
         <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero6.webp')"></div>
         <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero7.webp')"></div>
-        <div class="hero-slide" style="background-image:url('<?= BASE_URL ?>/public/images/hero8.jpg')"></div>
     </div>
 
     <div class="hero-bg-overlay"></div>
@@ -56,7 +53,7 @@
 
     <!-- Indicateurs de slides -->
     <div class="hero-dots" aria-label="Navigation diaporama">
-        <?php for ($i = 0; $i < 8; $i++): ?>
+        <?php for ($i = 0; $i < 5; $i++): ?>
         <button class="hero-dot<?= $i === 0 ? ' hero-dot--active' : '' ?>"
                 data-slide="<?= $i ?>" aria-label="Slide <?= $i + 1 ?>"></button>
         <?php endfor; ?>
