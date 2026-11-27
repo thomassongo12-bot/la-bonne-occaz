@@ -10,6 +10,11 @@ class SellingRequest {
             VALUES (:fn,:ln,:email,:phone,:brand,:model,:version,:year,:mileage,
                     :fuel,:trans,:color,:cond,:price,:desc,:ip)";
         $s = $this->db->prepare($sql);
+        // La ville est ajoutée en tête de description si présente
+        $desc = $d['description'] ?? '';
+        if (!empty($d['city'])) {
+            $desc = "Ville : " . $d['city'] . ($desc ? "\n\n" . $desc : '');
+        }
         $s->execute([
             ':fn'      => $d['first_name'],
             ':ln'      => $d['last_name'],
@@ -25,7 +30,7 @@ class SellingRequest {
             ':color'   => $d['color']         ?? null,
             ':cond'    => $d['condition_state'] ?? null,
             ':price'   => !empty($d['desired_price']) ? (float)$d['desired_price'] : null,
-            ':desc'    => $d['description']   ?? null,
+            ':desc'    => $desc,
             ':ip'      => $_SERVER['REMOTE_ADDR'],
         ]);
         return (int)$this->db->lastInsertId();
