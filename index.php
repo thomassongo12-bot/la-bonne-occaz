@@ -51,6 +51,7 @@ if (DEBUG_MODE) {
 }
 
 require_once ROOT_PATH . '/config/database.php';
+require_once ROOT_PATH . '/config/mailer.php';
 
 // ── Coordonnées dynamiques depuis site_settings ──────────────────
 // On écrase les constantes par défaut avec les valeurs enregistrées en admin

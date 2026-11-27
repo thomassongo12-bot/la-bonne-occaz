@@ -101,15 +101,11 @@ class SellingController extends BaseController {
     }
 
     private function notifyAdmin(array $d, int $id): void {
-        $to      = cfg_email();
-        $subject = "Nouvelle demande de vente/dépôt #$id - La Bonne Occaz";
-        $body    = "Nouvelle demande de dépôt-vente :\n\n"
-            . "Client : {$d['first_name']} {$d['last_name']}\n"
-            . "Email  : {$d['email']}\nTéléphone : {$d['phone']}\nVille : " . ($d['city'] ?? 'Non renseignée') . "\n\n"
-            . "Véhicule : {$d['brand']} {$d['model']} {$d['version']} ({$d['year']})\n"
-            . "Kilométrage : {$d['mileage']} km\nCarburant : {$d['fuel_type']}\n"
-            . "Prix souhaité : " . ($d['desired_price'] ? number_format($d['desired_price'],0,',',' ') . ' €' : 'Non renseigné') . "\n\n"
-            . "Voir dans l'administration : " . BASE_URL . "/admin/demandes";
-        @mail($to, $subject, $body, "From: noreply@labonneoccaz.fr");
+        $html = Mailer::sellingAdmin($d, $id);
+        Mailer::send(
+            cfg_email(),
+            "Demande de vente #{$id} — {$d['brand']} {$d['model']}",
+            $html
+        );
     }
 }

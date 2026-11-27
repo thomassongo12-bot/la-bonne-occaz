@@ -107,35 +107,24 @@ class ReservationController extends BaseController {
         return $errors;
     }
 
-    // ── Notifications ────────────────────────────────────────────────
     private function notifyAdmin(array $vehicle, int $reservationId): void {
-        $to      = cfg_email();
-        $subject = "🔒 Nouvelle réservation #{$reservationId} — " . ($vehicle['brand_name']??'') . ' ' . $vehicle['model'];
-        $fn = $this->sanitize($_POST['first_name']);
-        $ln = $this->sanitize($_POST['last_name']);
-        $em = htmlspecialchars($_POST['email']);
-        $ph = htmlspecialchars($_POST['phone']);
-        $body =
-            "Nouvelle réservation reçue :\n\n" .
-            "Client : $fn $ln\nEmail : $em\nTéléphone : $ph\nVille : " . htmlspecialchars($_POST['city'] ?? 'Non renseignée') . "\n\n" .
-            "Véhicule : " . ($vehicle['brand_name']??'') . " " . $vehicle['model'] . " ({$vehicle['year']})\n" .
-            "Prix : " . number_format($vehicle['price'],0,',',' ') . " €\n\n" .
-            "Voir dans l'administration : " . BASE_URL . "/admin/reservations/view/{$reservationId}";
-        @mail($to, $subject, $body, "From: noreply@labonneoccaz.fr\r\nContent-Type: text/plain; charset=UTF-8");
+        $html = Mailer::reservationAdmin($vehicle, $reservationId, $_POST);
+        Mailer::send(
+            cfg_email(),
+            "Réservation #{$reservationId} — " . ($vehicle['brand_name'] ?? '') . ' ' . $vehicle['model'],
+            $html
+        );
     }
 
     private function confirmClient(array $vehicle): void {
-        $to      = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+        $to = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
         if (!$to) return;
-        $fn      = $this->sanitize($_POST['first_name']);
-        $subject = "Confirmation de votre réservation — La Bonne Occaz";
-        $body    =
-            "Bonjour {$fn},\n\n" .
-            "Votre demande de réservation pour le véhicule suivant a bien été enregistrée :\n\n" .
-            "→ " . ($vehicle['brand_name']??'') . " " . $vehicle['model'] . " (" . $vehicle['year'] . ")\n" .
-            "→ Prix : " . number_format($vehicle['price'],0,',',' ') . " €\n\n" .
-            "Notre équipe vous contactera dans les 24h pour confirmer les détails et vous communiquer les prochaines étapes.\n\n" .
-            "Merci de votre confiance,\nL'équipe La Bonne Occaz\n" . cfg_phone();
-        @mail($to, $subject, $body, "From: " . cfg_email() . "\r\nContent-Type: text/plain; charset=UTF-8");
+        $html = Mailer::reservationClient($vehicle, $_POST);
+        Mailer::send(
+            $to,
+            "Confirmation de votre réservation — La Bonne Occaz",
+            $html,
+            cfg_email()
+        );
     }
 }

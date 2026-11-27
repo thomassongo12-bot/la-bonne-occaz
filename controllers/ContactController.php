@@ -39,7 +39,7 @@ class ContactController extends BaseController {
         }
 
         $model = new ContactRequest();
-        $model->create([
+        $contactId = $model->create([
             'type'       => 'contact',
             'first_name' => $fn,
             'last_name'  => $ln,
@@ -48,7 +48,7 @@ class ContactController extends BaseController {
             'message'    => ($city ? "Ville : $city\n\n" : '') . $msg,
         ]);
 
-        $this->sendNotificationEmail($fn, $ln, $email, $phone, $city, $msg);
+        $this->sendNotificationEmail($fn, $ln, $email, $phone, $city, $msg, $contactId);
 
         $this->flashMessage('success', 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.');
         $this->redirect('/contact');
@@ -88,11 +88,13 @@ class ContactController extends BaseController {
         $this->redirect($slug ? '/vehicule/' . $slug : '/vehicules');
     }
 
-    private function sendNotificationEmail(string $fn, string $ln, string $email, string $phone, string $city, string $msg): void {
-        $to      = cfg_email();
-        $subject = "Nouveau message - La Bonne Occaz";
-        $body    = "Nouveau message reçu :\n\nNom : $fn $ln\nEmail : $email\nTéléphone : $phone\nVille : $city\n\nMessage :\n$msg";
-        $headers = "From: noreply@labonneoccaz.fr\r\nReply-To: $email";
-        @mail($to, $subject, $body, $headers);
+    private function sendNotificationEmail(string $fn, string $ln, string $email, string $phone, string $city, string $msg, int $id): void {
+        $html = Mailer::contactAdmin($fn, $ln, $email, $phone, $city, $msg, $id);
+        Mailer::send(
+            cfg_email(),
+            "Message contact #{$id} — {$fn} {$ln}",
+            $html,
+            $email
+        );
     }
 }
