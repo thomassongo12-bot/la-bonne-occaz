@@ -1,43 +1,189 @@
 <?php
 /**
- * La Bonne Occaz — Mailer
- * Envoie des emails HTML via mail() avec les bons headers Hostinger.
- * L'expéditeur DOIT être un email du domaine hébergé (sinon rejeté).
+ * La Bonne Occaz — Mailer SMTP
+ *
+ * Utilise SMTP authentifié Hostinger (smtp.hostinger.com:465 SSL)
+ * pour garantir la délivrabilité et éviter les spams.
+ *
+ * Configuration : Admin → Paramètres → Email (ou variables d'env)
+ * - SMTP_HOST     : smtp.hostinger.com
+ * - SMTP_PORT     : 465
+ * - SMTP_USER     : votre email Hostinger (ex: contact@labonneoccaz.fr)
+ * - SMTP_PASS     : mot de passe de votre boîte email Hostinger
  */
 class Mailer {
 
+    // ── Config SMTP ─────────────────────────────────────────────────
+    // Modifiez ces valeurs avec vos identifiants Hostinger
+    private static string $smtpHost = 'smtp.hostinger.com';
+    private static int    $smtpPort = 465; // SSL
+    private static string $smtpUser = ''; // rempli dynamiquement depuis cfg_email()
+    private static string $smtpPass = ''; // à définir ci-dessous
+
     /**
-     * Envoie un email HTML.
+     * Mot de passe SMTP — à renseigner ici ou via variable d'environnement.
+     * Ne mettez PAS ce fichier dans Git si vous y mettez le mot de passe en clair.
+     * Préférez : define('SMTP_PASSWORD', 'votre_mdp') dans config/database.php
+     */
+    private static function getSmtpPass(): string {
+        // Priorité 1 : constante définie dans database.php
+        if (defined('SMTP_PASSWORD')) return SMTP_PASSWORD;
+        // Priorité 2 : variable d'environnement serveur
+        $env = getenv('SMTP_PASSWORD');
+        if ($env !== false) return $env;
+        // Priorité 3 : valeur statique (à éviter en production)
+        return self::$smtpPass;
+    }
+
+    // ── Envoi SMTP ──────────────────────────────────────────────────
+
+    /**
+     * Envoie un email via SMTP authentifié Hostinger.
      */
     public static function send(string $to, string $subject, string $html, string $replyTo = ''): bool {
-        $from = cfg_email();
+        $from    = cfg_email();
+        $pass    = self::getSmtpPass();
 
-        // Headers anti-spam : pas de Reply-To externe, Message-ID unique, Date explicite
+        // Si pas de mot de passe SMTP configuré → fallback mail() avec headers améliorés
+        if (empty($pass)) {
+            return self::sendFallback($to, $subject, $html, $from, $replyTo);
+        }
+
+        try {
+            return self::sendSmtp($to, $subject, $html, $from, $pass, $replyTo);
+        } catch (\Exception $e) {
+            // Log l'erreur silencieusement et tente le fallback
+            error_log('[Mailer] SMTP error: ' . $e->getMessage());
+            return self::sendFallback($to, $subject, $html, $from, $replyTo);
+        }
+    }
+
+    /**
+     * Envoi SMTP SSL natif (sans PHPMailer).
+     */
+    private static function sendSmtp(
+        string $to, string $subject, string $html,
+        string $from, string $pass, string $replyTo
+    ): bool {
+        $host    = self::$smtpHost;
+        $port    = self::$smtpPort;
+        $timeout = 15;
+
+        // Connexion SSL
+        $ctx = stream_context_create(['ssl' => [
+            'verify_peer'       => true,
+            'verify_peer_name'  => true,
+            'allow_self_signed' => false,
+        ]]);
+
+        $socket = @stream_socket_client(
+            "ssl://{$host}:{$port}",
+            $errno, $errstr, $timeout,
+            STREAM_CLIENT_CONNECT,
+            $ctx
+        );
+
+        if (!$socket) {
+            throw new \Exception("Connexion SMTP impossible : $errstr ($errno)");
+        }
+
+        stream_set_timeout($socket, $timeout);
+
+        $read = function() use ($socket) {
+            $resp = '';
+            while ($line = fgets($socket, 512)) {
+                $resp .= $line;
+                if ($line[3] === ' ') break; // fin de réponse multi-ligne
+            }
+            return $resp;
+        };
+
+        $write = function(string $cmd) use ($socket) {
+            fwrite($socket, $cmd . "\r\n");
+        };
+
+        $expect = function(string $code) use ($read) {
+            $resp = $read();
+            if (substr($resp, 0, 3) !== $code) {
+                throw new \Exception("SMTP: attendu $code, reçu: $resp");
+            }
+            return $resp;
+        };
+
+        // Dialogue SMTP
+        $read(); // Bannière
+        $write("EHLO " . (parse_url(BASE_URL, PHP_URL_HOST) ?: 'localhost'));
+        $expect('250');
+
+        // Auth LOGIN
+        $write("AUTH LOGIN");
+        $expect('334');
+        $write(base64_encode($from));
+        $expect('334');
+        $write(base64_encode($pass));
+        $expect('235');
+
+        // Envoi
+        $write("MAIL FROM:<{$from}>");
+        $expect('250');
+
+        // Destinataires multiples supportés
+        foreach (array_map('trim', explode(',', $to)) as $recipient) {
+            $write("RCPT TO:<{$recipient}>");
+            $expect('250');
+        }
+
+        $write("DATA");
+        $expect('354');
+
+        // Construction du message RFC 2822
+        $msgId   = '<' . uniqid('lbo', true) . '@' . (parse_url(BASE_URL, PHP_URL_HOST) ?: 'labonneoccaz.fr') . '>';
+        $headers = [
+            "From: La Bonne Occaz <{$from}>",
+            "To: {$to}",
+            "Subject: =?UTF-8?B?" . base64_encode($subject) . "?=",
+            "Date: " . date('r'),
+            "Message-ID: {$msgId}",
+            "MIME-Version: 1.0",
+            "Content-Type: text/html; charset=UTF-8",
+            "Content-Transfer-Encoding: base64",
+            "X-Mailer: LaBonneOccaz/2.0",
+        ];
+        if ($replyTo && $replyTo !== $from) {
+            $headers[] = "Reply-To: {$replyTo}";
+        }
+
+        $body = chunk_split(base64_encode($html));
+        $message = implode("\r\n", $headers) . "\r\n\r\n" . $body . "\r\n.\r\n";
+        $write($message);
+        $expect('250');
+
+        $write("QUIT");
+        fclose($socket);
+
+        return true;
+    }
+
+    /**
+     * Fallback mail() si SMTP non configuré.
+     */
+    private static function sendFallback(string $to, string $subject, string $html, string $from, string $replyTo): bool {
         $msgId   = '<' . uniqid('lbo', true) . '@' . (parse_url(BASE_URL, PHP_URL_HOST) ?: 'labonneoccaz.fr') . '>';
         $headers = implode("\r\n", array_filter([
             "MIME-Version: 1.0",
             "Content-Type: text/html; charset=UTF-8",
-            "Content-Transfer-Encoding: quoted-printable",
+            "Content-Transfer-Encoding: base64",
             "From: La Bonne Occaz <{$from}>",
-            // Reply-To uniquement si différent de l'expéditeur
             $replyTo && $replyTo !== $from ? "Reply-To: {$replyTo}" : '',
             "Message-ID: {$msgId}",
             "Date: " . date('r'),
-            "X-Mailer: LaBonneOccaz/1.0",
-            // Indique que c'est un email transactionnel (réduit score spam)
-            "X-Priority: 3",
-            "Precedence: bulk",
+            "X-Mailer: LaBonneOccaz/2.0",
         ]));
-
-        $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-        $encodedBody    = quoted_printable_encode($html);
-
-        return mail($to, $encodedSubject, $encodedBody, $headers);
+        return mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', chunk_split(base64_encode($html)), $headers);
     }
 
-    /**
-     * Génère le wrapper HTML commun pour tous les emails.
-     */
+    // ── Wrapper HTML ─────────────────────────────────────────────────
+
     public static function wrap(string $title, string $content): string {
         return '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <style>
@@ -64,7 +210,6 @@ class Mailer {
 
     // ── Templates ────────────────────────────────────────────────────
 
-    /** Email admin : nouvelle réservation */
     public static function reservationAdmin(array $v, int $id, array $post): string {
         $fn    = htmlspecialchars($post['first_name'] ?? '');
         $ln    = htmlspecialchars($post['last_name']  ?? '');
@@ -78,7 +223,7 @@ class Mailer {
         $url   = BASE_URL . '/admin/reservations/view/' . $id;
 
         $content = "
-        <p>Une nouvelle réservation <strong>#$id</strong> vient d'être enregistrée.</p>
+        <p>Nouvelle réservation <strong>#$id</strong> enregistrée.</p>
         <div class='section'>
           <h3>Client</h3>
           <div class='row'><span class='label'>Nom :</span><span class='val'>$fn $ln</span></div>
@@ -91,13 +236,12 @@ class Mailer {
           <div class='row'><span class='label'>Véhicule :</span><span class='val'>$brand ($year)</span></div>
           <div class='row'><span class='label'>Prix :</span><span class='val'>$price</span></div>
         </div>
-        " . ($msg ? "<div class='section'><h3>Message du client</h3><p>$msg</p></div>" : '') . "
-        <a href='$url' class='btn'>Voir la réservation dans l'admin</a>";
+        " . ($msg ? "<div class='section'><h3>Message</h3><p>$msg</p></div>" : '') . "
+        <a href='$url' class='btn'>Voir dans l'administration</a>";
 
         return self::wrap("Réservation #$id — $brand", $content);
     }
 
-    /** Email client : confirmation réservation */
     public static function reservationClient(array $v, array $post): string {
         $fn    = htmlspecialchars($post['first_name'] ?? '');
         $brand = htmlspecialchars(($v['brand_name'] ?? '') . ' ' . $v['model']);
@@ -107,19 +251,18 @@ class Mailer {
 
         $content = "
         <p>Bonjour <strong>$fn</strong>,</p>
-        <p>Votre demande de réservation a bien été enregistrée. Notre équipe vous contactera dans les <strong>24 heures</strong> pour confirmer les détails.</p>
+        <p>Votre réservation a bien été enregistrée. Notre équipe vous contactera dans les <strong>24 heures</strong>.</p>
         <div class='section'>
           <h3>Récapitulatif</h3>
           <div class='row'><span class='label'>Véhicule :</span><span class='val'>$brand ($year)</span></div>
           <div class='row'><span class='label'>Prix :</span><span class='val'>$price</span></div>
         </div>
-        <p>Pour toute question, contactez-nous au <strong>$phone</strong>.</p>
+        <p>Pour toute question : <strong>$phone</strong></p>
         <p>Merci de votre confiance,<br><strong>L'équipe La Bonne Occaz</strong></p>";
 
-        return self::wrap("Confirmation de votre réservation", $content);
+        return self::wrap("Confirmation de réservation", $content);
     }
 
-    /** Email admin : nouvelle demande de vente/dépôt */
     public static function sellingAdmin(array $d, int $id): string {
         $fn    = htmlspecialchars($d['first_name']);
         $ln    = htmlspecialchars($d['last_name']);
@@ -135,7 +278,7 @@ class Mailer {
         $url   = BASE_URL . '/admin/demandes';
 
         $content = "
-        <p>Une nouvelle demande de dépôt-vente <strong>#$id</strong> vient d'être reçue.</p>
+        <p>Nouvelle demande de dépôt-vente <strong>#$id</strong>.</p>
         <div class='section'>
           <h3>Client</h3>
           <div class='row'><span class='label'>Nom :</span><span class='val'>$fn $ln</span></div>
@@ -156,7 +299,6 @@ class Mailer {
         return self::wrap("Demande de vente #$id — $brand", $content);
     }
 
-    /** Email admin : nouveau message de contact */
     public static function contactAdmin(string $fn, string $ln, string $email, string $phone, string $city, string $msg, int $id): string {
         $fn   = htmlspecialchars($fn);
         $ln   = htmlspecialchars($ln);
@@ -167,7 +309,7 @@ class Mailer {
         $url  = BASE_URL . '/admin/demandes';
 
         $content = "
-        <p>Un nouveau message de contact <strong>#$id</strong> vient d'être reçu.</p>
+        <p>Nouveau message de contact <strong>#$id</strong>.</p>
         <div class='section'>
           <h3>Expéditeur</h3>
           <div class='row'><span class='label'>Nom :</span><span class='val'>$fn $ln</span></div>
@@ -181,7 +323,6 @@ class Mailer {
         return self::wrap("Message contact #$id — $fn $ln", $content);
     }
 
-    /** Email admin : demande depuis fiche véhicule */
     public static function vehicleContactAdmin(string $fn, string $ln, string $email, string $phone, string $msg, int $id, string $vehicleLabel, string $typeLabel): string {
         $fn    = htmlspecialchars($fn);
         $ln    = htmlspecialchars($ln);
@@ -193,7 +334,7 @@ class Mailer {
         $url   = BASE_URL . '/admin/demandes';
 
         $content = "
-        <p>Nouvelle <strong>$type</strong> <strong>#$id</strong> reçue depuis une fiche véhicule.</p>
+        <p>Nouvelle <strong>$type</strong> <strong>#$id</strong> depuis une fiche véhicule.</p>
         <div class='section'>
           <h3>Client</h3>
           <div class='row'><span class='label'>Nom :</span><span class='val'>$fn $ln</span></div>

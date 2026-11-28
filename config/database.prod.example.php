@@ -3,6 +3,12 @@
  * La Bonne Occaz — Connexion BDD PRODUCTION (Hostinger)
  * Renommez ce fichier en database.php et remplissez vos infos Hostinger
  */
+
+// ── SMTP — mot de passe email Hostinger ─────────────────────────────
+// hPanel → Emails → Gérer → mot de passe de votre boîte contact@votredomaine.com
+// C'est ce qui permet d'envoyer des emails depuis le serveur sans tomber dans les spams.
+define('SMTP_PASSWORD', 'VotreMotDePasseEmail'); // ← OBLIGATOIRE
+
 class Database {
     private static ?PDO $instance = null;
 
@@ -11,7 +17,7 @@ class Database {
     private static string $host     = 'localhost';          // toujours localhost sur Hostinger
     private static string $dbname   = 'u123456789_lbo';     // ex: u123456789_labonneoccaz
     private static string $user     = 'u123456789_lbo';     // ex: u123456789_lbouser
-    private static string $password = 'VotreMotDePasse';    // mot de passe BDD Hostinger
+    private static string $password = 'VotreMotDePasseBDD'; // mot de passe BDD Hostinger
     private static string $charset  = 'utf8mb4';
 
     private function __construct() {}
