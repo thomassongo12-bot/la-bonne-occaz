@@ -71,7 +71,7 @@ class ContactController extends BaseController {
             $this->flashMessage('error', 'Veuillez remplir tous les champs obligatoires.');
         } else {
             $model = new ContactRequest();
-            $model->create([
+            $reqId = $model->create([
                 'type'       => $type,
                 'vehicle_id' => $vehicleId ?: null,
                 'first_name' => $fn,
@@ -80,6 +80,31 @@ class ContactController extends BaseController {
                 'phone'      => $phone,
                 'message'    => $msg,
             ]);
+
+            // Récupérer le nom du véhicule pour l'email
+            $vehicleLabel = '';
+            if ($vehicleId) {
+                try {
+                    $v = (new Vehicle())->getById($vehicleId);
+                    if ($v) $vehicleLabel = ($v['brand_name'] ?? '') . ' ' . $v['model'];
+                } catch (\Exception $e) {}
+            }
+
+            $typeLabels = [
+                'vehicle_info' => 'Demande de renseignements',
+                'appointment'  => 'Demande de rendez-vous',
+                'financing'    => 'Demande de financement',
+            ];
+            $typeLabel = $typeLabels[$type] ?? 'Demande';
+
+            $html = Mailer::vehicleContactAdmin($fn, $ln, $email, $phone, $msg, $reqId, $vehicleLabel, $typeLabel);
+            Mailer::send(
+                cfg_email(),
+                "{$typeLabel} #{$reqId}" . ($vehicleLabel ? " — {$vehicleLabel}" : ''),
+                $html,
+                $email
+            );
+
             $this->flashMessage('success', 'Votre demande a bien été enregistrée. Nous vous contacterons rapidement.');
         }
 

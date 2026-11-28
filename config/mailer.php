@@ -8,26 +8,31 @@ class Mailer {
 
     /**
      * Envoie un email HTML.
-     * @param string $to      Destinataire
-     * @param string $subject Objet
-     * @param string $html    Corps HTML
-     * @param string $replyTo Email de réponse (optionnel)
-     * @return bool
      */
     public static function send(string $to, string $subject, string $html, string $replyTo = ''): bool {
-        $from = cfg_email(); // expéditeur = email du domaine Hostinger
+        $from = cfg_email();
 
-        $boundary = md5(uniqid());
-        $headers  = implode("\r\n", [
+        // Headers anti-spam : pas de Reply-To externe, Message-ID unique, Date explicite
+        $msgId   = '<' . uniqid('lbo', true) . '@' . (parse_url(BASE_URL, PHP_URL_HOST) ?: 'labonneoccaz.fr') . '>';
+        $headers = implode("\r\n", array_filter([
             "MIME-Version: 1.0",
             "Content-Type: text/html; charset=UTF-8",
+            "Content-Transfer-Encoding: quoted-printable",
             "From: La Bonne Occaz <{$from}>",
-            "Reply-To: " . ($replyTo ?: $from),
-            "X-Mailer: PHP/" . PHP_VERSION,
-        ]);
+            // Reply-To uniquement si différent de l'expéditeur
+            $replyTo && $replyTo !== $from ? "Reply-To: {$replyTo}" : '',
+            "Message-ID: {$msgId}",
+            "Date: " . date('r'),
+            "X-Mailer: LaBonneOccaz/1.0",
+            // Indique que c'est un email transactionnel (réduit score spam)
+            "X-Priority: 3",
+            "Precedence: bulk",
+        ]));
 
-        $result = mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $html, $headers);
-        return $result;
+        $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+        $encodedBody    = quoted_printable_encode($html);
+
+        return mail($to, $encodedSubject, $encodedBody, $headers);
     }
 
     /**
@@ -174,5 +179,31 @@ class Mailer {
         <a href='$url' class='btn'>Voir dans l'administration</a>";
 
         return self::wrap("Message contact #$id — $fn $ln", $content);
+    }
+
+    /** Email admin : demande depuis fiche véhicule */
+    public static function vehicleContactAdmin(string $fn, string $ln, string $email, string $phone, string $msg, int $id, string $vehicleLabel, string $typeLabel): string {
+        $fn    = htmlspecialchars($fn);
+        $ln    = htmlspecialchars($ln);
+        $em    = htmlspecialchars($email);
+        $ph    = htmlspecialchars($phone);
+        $body  = nl2br(htmlspecialchars($msg));
+        $veh   = htmlspecialchars($vehicleLabel);
+        $type  = htmlspecialchars($typeLabel);
+        $url   = BASE_URL . '/admin/demandes';
+
+        $content = "
+        <p>Nouvelle <strong>$type</strong> <strong>#$id</strong> reçue depuis une fiche véhicule.</p>
+        <div class='section'>
+          <h3>Client</h3>
+          <div class='row'><span class='label'>Nom :</span><span class='val'>$fn $ln</span></div>
+          <div class='row'><span class='label'>Email :</span><span class='val'><a href='mailto:$em'>$em</a></span></div>
+          <div class='row'><span class='label'>Téléphone :</span><span class='val'>" . ($ph ?: '—') . "</span></div>
+        </div>
+        " . ($veh ? "<div class='section'><h3>Véhicule concerné</h3><p><strong>$veh</strong></p></div>" : '') . "
+        <div class='section'><h3>Message</h3><p>$body</p></div>
+        <a href='$url' class='btn'>Voir dans l'administration</a>";
+
+        return self::wrap("$typeLabel #$id" . ($veh ? " — $veh" : ''), $content);
     }
 }
